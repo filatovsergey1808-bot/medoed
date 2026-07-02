@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фьючерсы Медоеда</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 16px;
+            color: #f0ece6;
+            background: #0d0d0d;
+            background-image: radial-gradient(ellipse at 30% 20%, #1a1a1a 0%, #0d0d0d 80%);
+            background-attachment: fixed;
+        }
+        #app {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px 20px 16px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .header .logo {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #f5d742;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(245, 215, 66, 0.15);
+        }
+        .header .sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+        .header .accent-line {
+            width: 50px;
+            height: 2px;
+            background: #f5d742;
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(245, 215, 66, 0.2);
+        }
+        .header .channel-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 16px;
+            background: rgba(245, 215, 66, 0.08);
+            border: 1px solid rgba(245, 215, 66, 0.15);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #f5d742;
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .header .channel-link:active {
+            background: rgba(245, 215, 66, 0.15);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+        }
+        .stat-card .num {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f5d742;
+            letter-spacing: 0.5px;
+        }
+        .stat-card .label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+        .stat-card .num.green { color: #6fcf97; }
+        .stat-card .num.red { color: #eb5757; }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+        .grid.submenu {
+            grid-template-columns: 1fr;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+        }
+        .card:active {
+            transform: scale(0.96);
+        }
+        .card .icon {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: rgba(245, 215, 66, 0.04);
+        }
+        .card .info {
+            padding: 12px 14px 14px 14px;
+            text-align: center;
+        }
+        .card .name {
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            color: #f0ece6;
+        }
+        .card .badge {
+            display: inline-block;
+            font-size: 9px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            background: rgba(245, 215, 66, 0.12);
+            color: #f5d742;
+        }
+        .card .badge.green { background: rgba(111, 207, 151, 0.12); color: #6fcf97; }
+        .card .badge.red { background: rgba(235, 87, 87, 0.12); color: #eb5757; }
+
+        /* Back */
+        .back-link {
+            display: inline-block;
+            padding: 6px 14px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 400;
+            color: #f0ece6;
+            background: rgba(255,255,255,0.04);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+            width: fit-content;
+        }
+        .back-link:active {
+            background: rgba(255,255,255,0.08);
+        }
+        .submenu-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+        .submenu-header .back-link {
+            margin-bottom: 0;
+        }
+        .submenu-header .category-title {
+            font-size: 14px;
+            font-weight: 400;
+            color: #f0ece6;
+            letter-spacing: 0.5px;
+        }
+
+        /* Detail */
+        .info-block {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 0;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .info-block .icon-big {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .info-block h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0ece6;
+            margin-bottom: 4px;
+        }
+        .info-block .subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 12px;
+        }
+        .info-block .section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .info-block .section h4 {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+        }
+        .info-block .section p {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.7;
+            color: #d0d0d0;
+            white-space: pre-line;
+        }
+        .info-block .price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f5d742;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        .info-block .price .change { font-size: 16px; font-weight: 400; }
+        .info-block .price .change.green { color: #6fcf97; }
+        .info-block .price .change.red { color: #eb5757; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+        .btn-success {
+            background: #f5d742;
+            color: #0d0d0d;
+        }
+        .btn-success:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        .btn-outline {
+            background: transparent;
+            color: #f0ece6;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-outline:active {
+            background: rgba(255,255,255,0.05);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            color: #f0ece6;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            padding: 0;
+        }
+        .back-btn:active { opacity: 0.6; }
+
+        /* Signal Badge */
+        .signal-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .signal-badge.buy { background: rgba(111, 207, 151, 0.15); color: #6fcf97; }
+        .signal-badge.sell { background: rgba(235, 87, 87, 0.15); color: #eb5757; }
+        .signal-badge.wait { background: rgba(245, 215, 66, 0.12); color: #f5d742; }
+
+        /* Progress */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            background: #f5d742;
+            transition: width 0.5s;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+        .row .val { color: #f0ece6; }
+        .row .lbl { color: rgba(255,255,255,0.3); }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🦡</div>
+            <h1>Фьючерсы Медоеда</h1>
+            <div class="sub">AUTO-TRADING STRATEGY</div>
+            <div class="accent-line"></div>
+            <a href="https://t.me/filview" target="_blank" class="channel-link">📢 @filview</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="num" id="statProfit">+42.7%</div>
+                <div class="label">Общая доходность</div>
+            </div>
+            <div class="stat-card">
+                <div class="num green" id="statWinrate">68%</div>
+                <div class="label">Винрейт</div>
+            </div>
+            <div class="stat-card">
+                <div class="num" id="statTrades">156</div>
+                <div class="label">Сделок</div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="gridContainer">
+            <div class="grid" id="grid"></div>
+        </div>
+
+        <!-- Detail -->
+        <div class="info-block hidden" id="detail">
+            <button class="back-btn" id="backBtn">← Назад</button>
+            <div class="icon-big" id="detailIcon">📊</div>
+            <h3 id="detailName"></h3>
+            <div class="subtitle" id="detailSubtitle"></div>
+            
+            <div id="detailPrice"></div>
+
+            <div class="section">
+                <h4>📝 Описание</h4>
+                <p id="detailDesc"></p>
+            </div>
+            
+            <div class="section">
+                <h4>📈 Сигнал</h4>
+                <p id="detailSignal"></p>
+            </div>
+            
+            <div class="section">
+                <h4>🎯 Уровни</h4>
+                <p id="detailLevels"></p>
+            </div>
+            
+            <div class="section">
+                <h4>⚙️ Параметры</h4>
+                <p id="detailParams"></p>
+            </div>
+
+            <button class="btn btn-success" id="backToMenuBtn">В главное меню</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // 1. ДАННЫЕ
+        // ================================================================
+
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Основные категории (инструменты)
+        const categories = [
+            {
+                id: 'futures',
+                name: 'Фьючерсы',
+                icon: '📊',
+                items: [
+                    { id: 'btc', name: 'Bitcoin', symbol: 'BTC/USDT', badge: 'Buy' },
+                    { id: 'eth', name: 'Ethereum', symbol: 'ETH/USDT', badge: 'Wait' },
+                    { id: 'sol', name: 'Solana', symbol: 'SOL/USDT', badge: 'Sell' }
+                ]
+            },
+            {
+                id: 'signals',
+                name: 'Сигналы',
+                icon: '📡',
+                items: [
+                    { id: 'active', name: 'Активные', badge: '3 сигнала' },
+                    { id: 'history', name: 'История', badge: 'Последние 10' }
+                ]
+            },
+            {
+                id: 'portfolio',
+                name: 'Портфель',
+                icon: '💼',
+                items: [
+                    { id: 'positions', name: 'Открытые позиции', badge: '2' },
+                    { id: 'closed', name: 'Закрытые', badge: '156' }
+                ]
+            },
+            {
+                id: 'stats',
+                name: 'Статистика',
+                icon: '📈',
+                items: [
+                    { id: 'detailed', name: 'Детальная', badge: 'Графики' },
+                    { id: 'monthly', name: 'По месяцам', badge: '2024' }
+                ]
+            },
+            {
+                id: 'settings',
+                name: 'Настройки',
+                icon: '⚙️',
+                items: [
+                    { id: 'risk', name: 'Управление рисками', badge: '5%' },
+                    { id: 'notify', name: 'Уведомления', badge: 'Вкл' }
+                ]
+            },
+            {
+                id: 'info',
+                name: 'О стратегии',
+                icon: '📖',
+                items: [
+                    { id: 'about', name: 'Описание', badge: 'Медоед' },
+                    { id: 'rules', name: 'Правила', badge: 'Читать' }
+                ]
+            }
+        ];
+
+        // Данные по инструментам
+        const details = {
+            'btc': {
+                icon: '₿',
+                name: 'Bitcoin / USDT',
+                subtitle: 'Фьючерсный контракт',
+                price: '62 450',
+                change: '+2.3%',
+                changeDir: 'green',
+                desc: 'Флагманская криптовалюта. Стратегия Медоеда входит в лонг при пробое уровня 61 800 с подтверждением объёма.',
+                signal: '🟢 BUY @ 62 100\n🎯 Take Profit: 63 500\n🛑 Stop Loss: 61 200',
+                levels: '📊 Сопротивление: 63 500\n📊 Поддержка: 61 200\n📊 Ключевой уровень: 62 800',
+                params: '📐 Плечо: x3\n💰 Маржа: 5%\n⏳ Таймфрейм: 4H'
+            },
+            'eth': {
+                icon: '⟠',
+                name: 'Ethereum / USDT',
+                subtitle: 'Фьючерсный контракт',
+                price: '3 120',
+                change: '-0.8%',
+                changeDir: 'red',
+                desc: 'Вторая по капитализации криптовалюта. Ожидаем подтверждения разворота от зоны 3 050.',
+                signal: '🟡 Ожидание\n🎯 Вход: 3 050\n🛑 Стоп: 2 980',
+                levels: '📊 Сопротивление: 3 200\n📊 Поддержка: 3 050\n📊 Ключевой уровень: 3 100',
+                params: '📐 Плечо: x2\n💰 Маржа: 5%\n⏳ Таймфрейм: 1H'
+            },
+            'sol': {
+                icon: '◎',
+                name: 'Solana / USDT',
+                subtitle: 'Фьючерсный контракт',
+                price: '168.50',
+                change: '-3.1%',
+                changeDir: 'red',
+                desc: 'Высокопроизводительный блокчейн. Стратегия фиксирует шорт при пробое 170 вниз.',
+                signal: '🔴 SELL @ 168.00\n🎯 Take Profit: 162.50\n🛑 Stop Loss: 171.00',
+                levels: '📊 Сопротивление: 172.00\n📊 Поддержка: 162.50\n📊 Ключевой уровень: 168.00',
+                params: '📐 Плечо: x2\n💰 Маржа: 5%\n⏳ Таймфрейм: 4H'
+            },
+            'active': {
+                icon: '📡',
+                name: 'Активные сигналы',
+                subtitle: '3 сигнала в работе',
+                price: 'BTC, ETH, SOL',
+                change: '',
+                changeDir: '',
+                desc: 'Текущие сигналы стратегии Медоеда. Обновление каждые 4 часа.',
+                signal: '1️⃣ BTC: BUY @ 62 100\n2️⃣ ETH: Ожидание @ 3 050\n3️⃣ SOL: SELL @ 168.00',
+                levels: '📊 BTC TP: 63 500\n📊 ETH вход: 3 050\n📊 SOL TP: 162.50',
+                params: '🔄 Обновление: 4H\n📊 Всего сигналов: 3\n📈 Винрейт: 68%'
+            },
+            'history': {
+                icon: '📜',
+                name: 'История сигналов',
+                subtitle: 'Последние 10 сделок',
+                price: 'Прибыль: +42.7%',
+                change: '',
+                changeDir: '',
+                desc: 'Последние 10 сделок стратегии Медоеда с результатами.',
+                signal: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%',
+                levels: '📊 Средний профит: +4.2%\n📊 Средний убыток: -1.8%\n📊 Фактор прибыли: 2.3',
+                params: '📅 Всего: 156 сделок\n📈 Винрейт: 68%\n💰 Общая доходность: +42.7%'
+            },
+            'positions': {
+                icon: '💼',
+                name: 'Открытые позиции',
+                subtitle: '2 позиции',
+                price: 'Общая маржа: $1 250',
+                change: '',
+                changeDir: '',
+                desc: 'Текущие открытые позиции по стратегии Медоеда.',
+                signal: '🟢 BTC: BUY @ 62 100 (x3)\n🔴 SOL: SELL @ 168.00 (x2)',
+                levels: '📊 BTC TP: 63 500 | SL: 61 200\n📊 SOL TP: 162.50 | SL: 171.00',
+                params: '💰 Общая маржа: $1 250\n📊 Плечо: x2-x3\n🔄 Следующий сигнал: 4H'
+            },
+            'closed': {
+                icon: '✅',
+                name: 'Закрытые позиции',
+                subtitle: '156 сделок',
+                price: 'Общий профит: +$4 270',
+                change: '',
+                changeDir: '',
+                desc: 'Все закрытые сделки стратегии Медоеда.',
+                signal: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%',
+                levels: '📊 Средний профит: +4.2%\n📊 Средний убыток: -1.8%',
+                params: '📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📅 Всего: 156 сделок'
+            },
+            'detailed': {
+                icon: '📈',
+                name: 'Детальная статистика',
+                subtitle: 'Полный анализ',
+                price: 'Доходность: +42.7%',
+                change: '',
+                changeDir: '',
+                desc: 'Подробная статистика стратегии Фьючерсы Медоеда.',
+                signal: '📊 Винрейт: 68%\n💰 Прибыль: +$4 270\n📉 Убыток: -$1 230',
+                levels: '📊 Макс. профит: +8.2%\n📊 Макс. убыток: -3.5%\n📊 Средняя сделка: +2.8%',
+                params: '📈 Sharpe: 1.8\n📊 Win/Loss: 2.3\n🔄 Сделок: 156'
+            },
+            'monthly': {
+                icon: '📅',
+                name: 'По месяцам',
+                subtitle: '2024 год',
+                price: 'Июнь: +8.2%',
+                change: '',
+                changeDir: '',
+                desc: 'Доходность стратегии по месяцам.',
+                signal: '📊 Янв: +2.1%\n📊 Фев: +3.4%\n📊 Мар: +5.6%\n📊 Апр: +4.2%\n📊 Май: +7.8%',
+                levels: '📊 Лучший месяц: Май (+7.8%)\n📊 Худший месяц: Янв (+2.1%)',
+                params: '📈 Средняя: +4.6%\n📊 Всего: +42.7%\n📅 2024 год'
+            },
+            'risk': {
+                icon: '🛡️',
+                name: 'Управление рисками',
+                subtitle: 'Настройки',
+                price: 'Риск на сделку: 5%',
+                change: '',
+                changeDir: '',
+                desc: 'Параметры управления рисками стратегии Медоеда.',
+                signal: '📊 Риск на сделку: 5%\n📊 Макс. позиций: 3\n📊 Стоп-лосс: динамический',
+                levels: '📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
+                params: '📐 Плечо: x2-x3\n💰 Маржа: 5%\n🛑 Стоп: ATR-based'
+            },
+            'notify': {
+                icon: '🔔',
+                name: 'Уведомления',
+                subtitle: 'Настройки',
+                price: 'Статус: Включены',
+                change: '',
+                changeDir: '',
+                desc: 'Настройки уведомлений о сигналах и сделках.',
+                signal: '✅ Сигналы: Telegram\n✅ Сделки: Telegram\n✅ Обновления: 4H',
+                levels: '📊 Канал: @filview\n📊 Частота: реальное время',
+                params: '🔔 Звук: Вкл\n📱 Вибрация: Вкл'
+            },
+            'about': {
+                icon: '📖',
+                name: 'О стратегии',
+                subtitle: 'Фьючерсы Медоеда',
+                price: 'Версия: 2.0',
+                change: '',
+                changeDir: '',
+                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа.',
+                signal: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n🎯 Цель: 40-60% годовых',
+                levels: '📊 Таймфрейм: 4H\n📊 Рынки: Криптофьючерсы',
+                params: '📈 Автор: @filview\n📅 Запуск: 2024\n🔒 Приватная стратегия'
+            },
+            'rules': {
+                icon: '📋',
+                name: 'Правила',
+                subtitle: 'Стратегия',
+                price: 'Соблюдайте риски',
+                change: '',
+                changeDir: '',
+                desc: 'Основные правила стратегии Фьючерсы Медоеда.',
+                signal: '1️⃣ Вход: подтверждение объёмом\n2️⃣ Выход: Take Profit 2:1\n3️⃣ Стоп: ATR x 1.5',
+                levels: '📊 Макс. позиций: 3\n📊 Риск: 5% на сделку',
+                params: '📈 Соблюдение правил - обязательно!'
+            }
+        };
+
+        // ================================================================
+        // 2. ЛОГИКА
+        // ================================================================
+
+        let currentView = 'main';
+        let currentCategoryId = null;
+
+        function renderMainMenu() {
+            currentView = 'main';
+            const grid = document.getElementById('grid');
+            grid.className = 'grid';
+            grid.innerHTML = '';
+            categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="icon">${cat.icon}</div>
+                    <div class="info">
+                        <div class="name">${cat.name}</div>
+                        <div class="badge">${cat.items.length}</div>
+                    </div>
+                `;
+                card.onclick = () => renderSubMenu(cat.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function renderSubMenu(categoryId) {
+            currentView = 'submenu';
+            currentCategoryId = categoryId;
+            const category = categories.find(c => c.id === categoryId);
+            const grid = document.getElementById('grid');
+            grid.className = 'grid submenu';
+            grid.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = 'submenu-header';
+            header.innerHTML = `
+                <span class="back-link" id="submenuBackBtn">← Назад</span>
+                <span class="category-title">${category.icon} ${category.name}</span>
+            `;
+            grid.appendChild(header);
+            header.querySelector('#submenuBackBtn').onclick = renderMainMenu;
+
+            category.items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const isSignal = item.badge === 'Buy' || item.badge === 'Sell' || item.badge === 'Wait';
+                const badgeClass = item.badge === 'Buy' ? 'green' : (item.badge === 'Sell' ? 'red' : '');
+                card.innerHTML = `
+                    <div class="icon">${details[item.id]?.icon || '📊'}</div>
+                    <div class="info">
+                        <div class="name">${item.name}</div>
+                        <div class="badge ${badgeClass}">${item.badge}</div>
+                    </div>
+                `;
+                card.onclick = () => showDetail(item.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function showDetail(id) {
+            currentView = 'detail';
+            const data = details[id];
+            if (!data) return;
+
+            document.getElementById('grid').classList.add('hidden');
+            document.getElementById('detail').classList.remove('hidden');
+
+            document.getElementById('detailIcon').textContent = data.icon || '📊';
+            document.getElementById('detailName').textContent = data.name;
+            document.getElementById('detailSubtitle').textContent = data.subtitle || '';
+
+            const priceHtml = data.price ? `
+                <div class="price">
+                    ${data.price}
+                    ${data.change ? `<span class="change ${data.changeDir || ''}"> ${data.change}</span>` : ''}
+                </div>
+            ` : '';
+            document.getElementById('detailPrice').innerHTML = priceHtml;
+
+            document.getElementById('detailDesc').textContent = data.desc || '';
+            document.getElementById('detailSignal').textContent = data.signal || '';
+            document.getElementById('detailLevels').textContent = data.levels || '';
+            document.getElementById('detailParams').textContent = data.params || '';
+
+            tg.HapticFeedback.impactOccurred('medium');
+        }
+
+        function goToMainMenu() {
+            currentView = 'main';
+            document.getElementById('grid').classList.remove('hidden');
+            document.getElementById('detail').classList.add('hidden');
+            renderMainMenu();
+        }
+
+        // ================================================================
+        // 3. ОБРАБОТЧИКИ
+        // ================================================================
+
+        document.getElementById('backBtn').onclick = () => {
+            if (currentView === 'detail') {
+                document.getElementById('detail').classList.add('hidden');
+                document.getElementById('grid').classList.remove('hidden');
+                if (currentCategoryId) {
+                    renderSubMenu(currentCategoryId);
+                } else {
+                    renderMainMenu();
+                }
+            }
+        };
+        document.getElementById('backToMenuBtn').onclick = goToMainMenu;
+
+        // ================================================================
+        // 4. ЗАПУСК
+        // ================================================================
+
+        renderMainMenu();
+
+        tg.MainButton.setText('Открыть канал');
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+            tg.openTelegramLink('https://t.me/filview');
+        });
+    </script>
+</body>
+</html>
