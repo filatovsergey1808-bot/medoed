@@ -6,150 +6,160 @@
     <title>Фьючерсы Медоеда</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Импорт узкого шрифта */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            padding: 16px;
+            padding: 20px 16px;
             color: #f0ece6;
             background: #0d0d0d;
             background-image: radial-gradient(ellipse at 30% 20%, #1a1a1a 0%, #0d0d0d 80%);
             background-attachment: fixed;
+            font-weight: 300;
+            letter-spacing: 0.3px;
         }
         #app {
             position: relative;
             z-index: 1;
-            max-width: 500px;
+            max-width: 420px;
             margin: 0 auto;
         }
 
+        /* HEADER */
         .header {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 20px 20px 16px 20px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 18px 20px 14px 20px;
+            margin-bottom: 18px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         .header .logo {
-            font-size: 32px;
-            margin-bottom: 4px;
+            font-size: 28px;
+            margin-bottom: 2px;
         }
         .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 3px;
             color: #f5d742;
             text-transform: uppercase;
-            text-shadow: 0 0 30px rgba(245, 215, 66, 0.15);
+            text-shadow: 0 0 30px rgba(245, 215, 66, 0.12);
         }
         .header .sub {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 2px;
-            margin-top: 4px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 3.5px;
+            margin-top: 3px;
+            font-weight: 200;
+            text-transform: uppercase;
         }
         .header .accent-line {
-            width: 50px;
-            height: 2px;
+            width: 40px;
+            height: 1.5px;
             background: #f5d742;
-            margin: 10px auto 0 auto;
+            margin: 8px auto 0 auto;
             border-radius: 2px;
-            box-shadow: 0 0 20px rgba(245, 215, 66, 0.2);
+            box-shadow: 0 0 20px rgba(245, 215, 66, 0.15);
         }
         .header .channel-link {
             display: inline-block;
-            margin-top: 10px;
-            padding: 6px 16px;
-            background: rgba(245, 215, 66, 0.08);
-            border: 1px solid rgba(245, 215, 66, 0.15);
+            margin-top: 8px;
+            padding: 4px 14px;
+            background: rgba(245, 215, 66, 0.06);
+            border: 1px solid rgba(245, 215, 66, 0.1);
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 10px;
+            font-weight: 300;
             color: #f5d742;
             text-decoration: none;
             transition: all 0.3s;
-            letter-spacing: 0.5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
         .header .channel-link:active {
             background: rgba(245, 215, 66, 0.15);
         }
 
+        /* СТАТИСТИКА */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 18px;
         }
         .stat-card {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px;
-            padding: 14px 10px;
+            border-radius: 12px;
+            padding: 12px 8px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
         }
         .stat-card .num {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 400;
             color: #f5d742;
             letter-spacing: 0.5px;
         }
         .stat-card .label {
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.3);
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.2);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
+            letter-spacing: 1.5px;
+            margin-top: 3px;
+            font-weight: 200;
         }
         .stat-card .num.green { color: #6fcf97; }
         .stat-card .num.red { color: #eb5757; }
 
+        /* AUM + ПОДПИСЧИКИ */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 18px;
         }
         .aum-card {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 14px 12px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
             transition: all 0.3s;
         }
-        .aum-card .icon {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
         .aum-card .num {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 400;
             color: #f5d742;
             letter-spacing: 0.5px;
         }
         .aum-card .num.green { color: #6fcf97; }
         .aum-card .label {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.2);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 4px;
+            letter-spacing: 1.5px;
+            margin-top: 3px;
+            font-weight: 200;
         }
 
-        /* КНОПКИ НА ВСЮ ШИРИНУ */
+        /* КНОПКИ - УЗКИЕ, БЕЗ ЭМОДЗИ */
         .grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 8px;
             width: 100%;
         }
         .grid.submenu {
@@ -160,146 +170,152 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             width: 100%;
+            padding: 14px 20px;
         }
         .card:active {
-            transform: scale(0.96);
-        }
-        .card .icon {
-            width: 100%;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            background: rgba(245, 215, 66, 0.04);
+            transform: scale(0.97);
         }
         .card .info {
-            padding: 12px 14px 14px 14px;
             text-align: center;
         }
         .card .name {
-            font-weight: 500;
-            font-size: 16px;
-            letter-spacing: 0.5px;
+            font-weight: 300;
+            font-size: 13px;
+            letter-spacing: 2.5px;
             color: #f0ece6;
+            text-transform: uppercase;
         }
         .card .badge {
             display: inline-block;
-            font-size: 10px;
-            padding: 2px 12px;
-            border-radius: 10px;
+            font-size: 8px;
+            padding: 2px 10px;
+            border-radius: 8px;
             margin-top: 4px;
-            letter-spacing: 0.5px;
-            background: rgba(245, 215, 66, 0.12);
-            color: #f5d742;
+            letter-spacing: 1px;
+            background: rgba(245, 215, 66, 0.08);
+            color: rgba(245, 215, 66, 0.5);
+            font-weight: 200;
         }
 
+        /* Навигация назад */
         .back-link {
             display: inline-block;
-            padding: 6px 14px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            font-weight: 400;
-            color: #f0ece6;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 20px;
+            padding: 4px 12px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
             cursor: pointer;
             transition: background 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             width: fit-content;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .back-link:active {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
         }
         .submenu-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             padding: 0 4px;
         }
         .submenu-header .back-link {
             margin-bottom: 0;
         }
         .submenu-header .category-title {
-            font-size: 14px;
-            font-weight: 400;
-            color: #f0ece6;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
+        /* Детальная страница */
         .info-block {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 14px;
+            padding: 18px 18px 20px;
             margin-top: 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .info-block .icon-big {
-            font-size: 48px;
+            font-size: 36px;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         .info-block h3 {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 400;
             color: #f0ece6;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         .info-block .subtitle {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-bottom: 12px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            font-weight: 200;
         }
         .info-block .section {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
         .info-block .section h4 {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            margin-bottom: 6px;
-            color: rgba(255, 255, 255, 0.3);
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.2);
             text-transform: uppercase;
         }
         .info-block .section p {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 300;
-            line-height: 1.7;
-            color: #d0d0d0;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
             white-space: pre-line;
+            letter-spacing: 0.3px;
         }
         .info-block .price {
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 400;
             color: #f5d742;
-            margin-top: 8px;
+            margin-top: 6px;
             letter-spacing: 0.5px;
         }
 
+        /* Кнопки */
         .btn {
             display: block;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 500;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 400;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            margin-top: 12px;
-            letter-spacing: 0.5px;
+            margin-top: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
         }
         .btn-success {
             background: #f5d742;
@@ -307,18 +323,17 @@
         }
         .btn-success:active {
             opacity: 0.8;
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
         .btn-tg {
-            background: rgba(245, 215, 66, 0.12);
+            background: rgba(245, 215, 66, 0.08);
             color: #f5d742;
-            border: 2px solid rgba(245, 215, 66, 0.25);
-            font-weight: 600;
-            letter-spacing: 2px;
+            border: 1px solid rgba(245, 215, 66, 0.15);
+            font-weight: 400;
         }
         .btn-tg:active {
-            background: rgba(245, 215, 66, 0.25);
-            transform: scale(0.98);
+            background: rgba(245, 215, 66, 0.15);
+            transform: scale(0.97);
         }
         .hidden {
             display: none !important;
@@ -326,46 +341,59 @@
         .back-btn {
             background: none;
             border: none;
-            color: #f0ece6;
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            font-weight: 300;
             cursor: pointer;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             padding: 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
         }
-        .back-btn:active { opacity: 0.6; }
+        .back-btn:active { opacity: 0.5; }
 
+        /* Шаги подписки */
         .subscribe-steps {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
         }
         .subscribe-steps .step {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
         .subscribe-steps .step:last-child {
             border-bottom: none;
         }
         .subscribe-steps .step-num {
-            width: 28px;
-            height: 28px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: rgba(245, 215, 66, 0.12);
-            color: #f5d742;
+            background: rgba(245, 215, 66, 0.08);
+            color: rgba(245, 215, 66, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 400;
             flex-shrink: 0;
+            font-family: 'Montserrat', sans-serif;
         }
         .subscribe-steps .step-text {
-            font-size: 14px;
-            color: #d0d0d0;
+            font-size: 12px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.3px;
+        }
+
+        /* Убираем эмодзи из карточек */
+        .card .icon {
+            display: none;
         }
     </style>
 </head>
@@ -375,21 +403,19 @@
         <div class="header">
             <div class="logo">🦡</div>
             <h1>Фьючерсы Медоеда</h1>
-            <div class="sub">AUTO-TRADING STRATEGY</div>
+            <div class="sub">Auto-Trading Strategy</div>
             <div class="accent-line"></div>
-            <a href="https://t.me/filview" target="_blank" class="channel-link">📢 @filview</a>
+            <a href="https://t.me/filview" target="_blank" class="channel-link">@filview</a>
         </div>
 
         <!-- AUM + ПОДПИСЧИКИ -->
         <div class="aum-grid">
             <div class="aum-card">
-                <div class="icon">💰</div>
-                <div class="num green" id="aumValue">$1 247 500</div>
+                <div class="num green">$1 247 500</div>
                 <div class="label">В управлении</div>
             </div>
             <div class="aum-card">
-                <div class="icon">👥</div>
-                <div class="num" id="subscriberCount">1 847</div>
+                <div class="num">1 847</div>
                 <div class="label">Подписчиков</div>
             </div>
         </div>
@@ -397,20 +423,20 @@
         <!-- СТАТИСТИКА -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="num green" id="statProfit">+42.7%</div>
-                <div class="label">Общая доходность</div>
+                <div class="num green">+42.7%</div>
+                <div class="label">Доходность</div>
             </div>
             <div class="stat-card">
-                <div class="num green" id="statWinrate">68%</div>
+                <div class="num green">68%</div>
                 <div class="label">Винрейт</div>
             </div>
             <div class="stat-card">
-                <div class="num" id="statTrades">156</div>
+                <div class="num">156</div>
                 <div class="label">Сделок</div>
             </div>
         </div>
 
-        <!-- ГЛАВНОЕ МЕНЮ (КНОПКИ НА ВСЮ ШИРИНУ) -->
+        <!-- ГЛАВНОЕ МЕНЮ -->
         <div id="gridContainer">
             <div class="grid" id="grid"></div>
         </div>
@@ -423,30 +449,28 @@
             <div class="subtitle" id="detailSubtitle"></div>
             <div id="detailPrice"></div>
             
-            <!-- Контент для всех страниц -->
             <div id="detailContent">
                 <div class="section">
-                    <h4 id="detailSection1Title">📝 Описание</h4>
+                    <h4 id="detailSection1Title">Описание</h4>
                     <p id="detailDesc"></p>
                 </div>
                 <div class="section">
-                    <h4 id="detailSection2Title">📊 Статистика</h4>
+                    <h4 id="detailSection2Title">Статистика</h4>
                     <p id="detailStats"></p>
                 </div>
                 <div class="section">
-                    <h4 id="detailSection3Title">⚙️ Параметры</h4>
+                    <h4 id="detailSection3Title">Параметры</h4>
                     <p id="detailParams"></p>
                 </div>
             </div>
 
-            <!-- Контент для подписки (инструкция) -->
             <div id="subscribeContent" class="hidden">
                 <div class="section">
-                    <h4>📝 Как подписаться</h4>
+                    <h4>Как подписаться</h4>
                     <p id="subscribeDesc"></p>
                 </div>
                 <div class="subscribe-steps" id="subscribeSteps"></div>
-                <button class="btn btn-tg" id="subscribeBtn">📢 Перейти в канал</button>
+                <button class="btn btn-tg" id="subscribeBtn">Перейти в канал</button>
             </div>
 
             <button class="btn btn-success" id="backToMenuBtn">На главную</button>
@@ -473,89 +497,59 @@
         // ================================================================
         // 2. ДАННЫЕ
         // ================================================================
-        
-        // Главное меню - 4 кнопки
         const categories = [
-            {
-                id: 'strategy',
-                name: 'О стратегии',
-                icon: '📖'
-            },
-            {
-                id: 'stats_detailed',
-                name: 'Статистика',
-                icon: '📈'
-            },
-            {
-                id: 'portfolio',
-                name: 'Портфель',
-                icon: '💼'
-            },
-            {
-                id: 'subscribe',
-                name: 'Подписаться',
-                icon: '🔗'
-            }
+            { id: 'strategy', name: 'О стратегии' },
+            { id: 'stats_detailed', name: 'Статистика' },
+            { id: 'portfolio', name: 'Портфель' },
+            { id: 'subscribe', name: 'Подписаться' }
         ];
 
-        // Данные для страниц
         const detailsData = {
-            // --- О СТРАТЕГИИ (всё сразу) ---
             'strategy': {
                 icon: '📖',
                 name: 'О стратегии',
                 subtitle: 'Фьючерсы Медоеда',
-                price: 'Версия: 2.0',
+                price: 'Версия 2.0',
                 desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа. Торгуем криптофьючерсы с плечом x2-x3. Таймфрейм 4H.',
-                stats: '📊 Винрейт: 68%\n💰 Доходность: +42.7%\n📈 Сделок: 156\n🏆 Фактор прибыли: 2.3',
-                params: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n⏳ Таймфрейм: 4H\n📅 Запуск: 2024\n📐 Плечо: x2-x3\n🛡️ Риск: 5% на сделку'
+                stats: 'Винрейт: 68%\nДоходность: +42.7%\nСделок: 156\nФактор прибыли: 2.3',
+                params: 'Основа: трендовый анализ\nИндикаторы: EMA, RSI, Volume\nТаймфрейм: 4H\nЗапуск: 2024\nПлечо: x2-x3\nРиск: 5% на сделку'
             },
-            
-            // --- СТАТИСТИКА: ЗА ВСЁ ВРЕМЯ ---
             'all_time': {
                 icon: '📊',
                 name: 'За всё время',
                 subtitle: 'Полная статистика',
                 price: 'Доходность: +42.7%',
                 desc: 'Статистика стратегии Фьючерсы Медоеда за весь период.',
-                stats: '📊 Всего сделок: 156\n✅ Прибыльных: 106\n❌ Убыточных: 50\n📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📈 Средний профит: +4.2%\n📉 Средний убыток: -1.8%\n🏆 Фактор прибыли: 2.3\n📊 Sharpe: 1.8',
-                params: '📅 Период: 2024\n🔄 Сделок: 156\n📈 Лучшая сделка: +8.2%\n📉 Худшая сделка: -3.5%'
+                stats: 'Всего сделок: 156\nПрибыльных: 106\nУбыточных: 50\nВинрейт: 68%\nОбщая доходность: +42.7%\nСредний профит: +4.2%\nСредний убыток: -1.8%\nФактор прибыли: 2.3\nSharpe: 1.8',
+                params: 'Период: 2024\nСделок: 156\nЛучшая сделка: +8.2%\nХудшая сделка: -3.5%'
             },
-            
-            // --- СТАТИСТИКА: ЗА ПОСЛЕДНИЙ МЕСЯЦ ---
             'last_month': {
                 icon: '📅',
                 name: 'За последний месяц',
                 subtitle: 'Июнь 2024',
                 price: 'Доходность: +8.2%',
                 desc: 'Статистика стратегии за последний месяц (июнь 2024).',
-                stats: '📊 Сделок: 24\n✅ Прибыльных: 17\n❌ Убыточных: 7\n📈 Винрейт: 71%\n💰 Доходность: +8.2%\n📈 Средний профит: +5.1%\n📉 Средний убыток: -1.9%',
-                params: '📅 Период: Июнь 2024\n🔄 Сделок: 24\n📈 Лучшая сделка: +7.2%\n📉 Худшая сделка: -2.8%'
+                stats: 'Сделок: 24\nПрибыльных: 17\nУбыточных: 7\nВинрейт: 71%\nДоходность: +8.2%\nСредний профит: +5.1%\nСредний убыток: -1.9%',
+                params: 'Период: Июнь 2024\nСделок: 24\nЛучшая сделка: +7.2%\nХудшая сделка: -2.8%'
             },
-            
-            // --- ПОРТФЕЛЬ: ТЕКУЩИЕ ПОЗИЦИИ ---
             'positions': {
                 icon: '💼',
                 name: 'Текущие позиции',
                 subtitle: '3 открытые позиции',
                 price: 'Общая маржа: $1 250',
                 desc: 'Текущие открытые позиции по стратегии Медоеда.',
-                stats: '🟢 BTC: BUY @ 62 100 (x3)\n🟡 ETH: Ожидание @ 3 050\n🔴 SOL: SELL @ 168.00 (x2)',
-                params: '💰 Общая маржа: $1 250\n📊 Плечо: x2-x3\n🔄 Следующий сигнал: 4H\n📈 Текущий P&L: +2.3%'
+                stats: 'BTC: BUY @ 62 100 (x3)\nETH: Ожидание @ 3 050\nSOL: SELL @ 168.00 (x2)',
+                params: 'Общая маржа: $1 250\nПлечо: x2-x3\nСледующий сигнал: 4H\nТекущий P&L: +2.3%'
             },
-            
-            // --- ПОРТФЕЛЬ: ЗАКРЫТЫЕ ---
             'closed': {
                 icon: '✅',
                 name: 'Закрытые позиции',
                 subtitle: '156 сделок',
                 price: 'Общий профит: +$4 270',
                 desc: 'Все закрытые сделки стратегии Медоеда.',
-                stats: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%\n✅ SOL +1.9%\n❌ BTC -1.5%\n✅ ETH +3.1%\n✅ SOL +2.7%\n✅ BTC +5.2%',
-                params: '📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📅 Всего: 156 сделок\n📊 Средний профит: +4.2%'
+                stats: 'BTC +3.2%\nETH +1.8%\nSOL -2.1%\nBTC +4.5%\nETH +2.3%\nSOL +1.9%\nBTC -1.5%\nETH +3.1%\nSOL +2.7%\nBTC +5.2%',
+                params: 'Винрейт: 68%\nОбщая доходность: +42.7%\nВсего: 156 сделок\nСредний профит: +4.2%'
             },
-            
-            // --- ПОДПИСАТЬСЯ (инструкция) ---
             'subscribe': {
                 icon: '🔗',
                 name: 'Как подписаться',
@@ -567,7 +561,7 @@
                 steps: [
                     'Нажмите кнопку "Перейти в канал" ниже',
                     'Нажмите "Подписаться" в Telegram',
-                    'Готово! Вы в стратегии! 🦡'
+                    'Готово! Вы в стратегии'
                 ]
             }
         };
@@ -588,7 +582,6 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="icon">${cat.icon}</div>
                     <div class="info">
                         <div class="name">${cat.name}</div>
                     </div>
@@ -619,21 +612,20 @@
             header.className = 'submenu-header';
             header.innerHTML = `
                 <span class="back-link" id="submenuBackBtn">← Назад</span>
-                <span class="category-title">📈 Статистика</span>
+                <span class="category-title">Статистика</span>
             `;
             grid.appendChild(header);
             document.getElementById('submenuBackBtn').onclick = renderMainMenu;
 
             const statsItems = [
-                { id: 'all_time', name: 'За всё время', icon: '📊' },
-                { id: 'last_month', name: 'За последний месяц', icon: '📅' }
+                { id: 'all_time', name: 'За всё время' },
+                { id: 'last_month', name: 'За последний месяц' }
             ];
 
             statsItems.forEach(function(item) {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="icon">${item.icon}</div>
                     <div class="info">
                         <div class="name">${item.name}</div>
                     </div>
@@ -654,21 +646,20 @@
             header.className = 'submenu-header';
             header.innerHTML = `
                 <span class="back-link" id="submenuBackBtn">← Назад</span>
-                <span class="category-title">💼 Портфель</span>
+                <span class="category-title">Портфель</span>
             `;
             grid.appendChild(header);
             document.getElementById('submenuBackBtn').onclick = renderMainMenu;
 
             const portfolioItems = [
-                { id: 'positions', name: 'Текущие позиции', icon: '📊' },
-                { id: 'closed', name: 'Закрытые', icon: '✅' }
+                { id: 'positions', name: 'Текущие позиции' },
+                { id: 'closed', name: 'Закрытые' }
             ];
 
             portfolioItems.forEach(function(item) {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="icon">${item.icon}</div>
                     <div class="info">
                         <div class="name">${item.name}</div>
                     </div>
@@ -686,11 +677,9 @@
             document.getElementById('grid').classList.add('hidden');
             document.getElementById('detail').classList.remove('hidden');
 
-            // Получаем элементы
             const detailContent = document.getElementById('detailContent');
             const subscribeContent = document.getElementById('subscribeContent');
 
-            // Показываем/скрываем блоки
             if (id === 'subscribe') {
                 detailContent.classList.add('hidden');
                 subscribeContent.classList.remove('hidden');
@@ -716,13 +705,11 @@
                 detailContent.classList.remove('hidden');
                 subscribeContent.classList.add('hidden');
                 
-                // Заполняем общие поля
                 document.getElementById('detailDesc').textContent = data.desc || '';
                 document.getElementById('detailStats').textContent = data.stats || '';
                 document.getElementById('detailParams').textContent = data.params || '';
             }
 
-            // Заполняем заголовки
             document.getElementById('detailIcon').textContent = data.icon || '📊';
             document.getElementById('detailName').textContent = data.name;
             document.getElementById('detailSubtitle').textContent = data.subtitle || '';
@@ -761,7 +748,6 @@
         // ================================================================
         renderMainMenu();
 
-        // Скрываем кнопку снизу
         try {
             tg.MainButton.hide();
         } catch(e) {}
