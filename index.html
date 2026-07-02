@@ -81,7 +81,6 @@
             background: rgba(245, 215, 66, 0.15);
         }
 
-        /* Большие статистические карточки */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -112,7 +111,6 @@
         .stat-card .num.green { color: #6fcf97; }
         .stat-card .num.red { color: #eb5757; }
 
-        /* Специальные карточки AUM и подписчики */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -312,14 +310,6 @@
             opacity: 0.8;
             transform: scale(0.98);
         }
-        .btn-subscribe {
-            background: rgba(245, 215, 66, 0.15);
-            color: #f5d742;
-            border: 1px solid rgba(245, 215, 66, 0.2);
-        }
-        .btn-subscribe:active {
-            background: rgba(245, 215, 66, 0.25);
-        }
         .hidden {
             display: none !important;
         }
@@ -334,11 +324,17 @@
         }
         .back-btn:active { opacity: 0.6; }
 
-        /* Стиль для подписчиков */
-        .subscriber-count {
-            font-size: 28px;
-            font-weight: 700;
-            color: #6fcf97;
+        /* Стиль для кнопки ТГ-КАНАЛ */
+        .btn-tg {
+            background: rgba(245, 215, 66, 0.12);
+            color: #f5d742;
+            border: 2px solid rgba(245, 215, 66, 0.25);
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        .btn-tg:active {
+            background: rgba(245, 215, 66, 0.25);
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -468,24 +464,6 @@
                     { id: 'detailed', name: 'Детальная', badge: 'Графики' },
                     { id: 'monthly', name: 'По месяцам', badge: '2024' }
                 ]
-            },
-            {
-                id: 'settings',
-                name: 'Настройки',
-                icon: '⚙️',
-                items: [
-                    { id: 'risk', name: 'Управление рисками', badge: '5%' },
-                    { id: 'notify', name: 'Уведомления', badge: 'Вкл' }
-                ]
-            },
-            {
-                id: 'faq',
-                name: 'FAQ',
-                icon: '❓',
-                items: [
-                    { id: 'faq_questions', name: 'Частые вопросы', badge: '10' },
-                    { id: 'support', name: 'Поддержка', badge: 'Чат' }
-                ]
             }
         ];
 
@@ -524,7 +502,7 @@
                 price: 'Всего 3 шага',
                 desc: 'Подпишитесь на канал @filview и начните получать сигналы стратегии Медоеда.',
                 stats: '👥 Подписчиков: 1 847\n💰 В управлении: $1 247 500\n📈 Доходность: +42.7%',
-                params: '1️⃣ Нажмите кнопку "Подписаться" внизу\n2️⃣ Перейдите в канал @filview\n3️⃣ Нажмите "Подписаться" в Telegram\n4️⃣ Готово! Вы в стратегии'
+                params: '1️⃣ Нажмите кнопку "ТГ-КАНАЛ" внизу\n2️⃣ Перейдите в канал @filview\n3️⃣ Нажмите "Подписаться" в Telegram\n4️⃣ Готово! Вы в стратегии'
             },
             'channel': {
                 icon: '📢',
@@ -570,42 +548,6 @@
                 desc: 'Доходность стратегии по месяцам.',
                 stats: '📊 Янв: +2.1%\n📊 Фев: +3.4%\n📊 Мар: +5.6%\n📊 Апр: +4.2%\n📊 Май: +7.8%\n📊 Июн: +8.2%',
                 params: '📈 Лучший месяц: Июнь (+8.2%)\n📉 Худший месяц: Янв (+2.1%)\n📊 Средняя: +4.6%\n📅 Всего: +42.7%'
-            },
-            'risk': {
-                icon: '🛡️',
-                name: 'Управление рисками',
-                subtitle: 'Настройки',
-                price: 'Риск на сделку: 5%',
-                desc: 'Параметры управления рисками стратегии Медоеда.',
-                stats: '📊 Риск на сделку: 5%\n📊 Макс. позиций: 3\n📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
-                params: '📐 Плечо: x2-x3\n💰 Маржа: 5%\n🛑 Стоп: ATR-based\n📈 Динамический стоп: Вкл'
-            },
-            'notify': {
-                icon: '🔔',
-                name: 'Уведомления',
-                subtitle: 'Настройки',
-                price: 'Статус: Включены',
-                desc: 'Настройки уведомлений о сигналах и сделках.',
-                stats: '✅ Сигналы: Telegram\n✅ Сделки: Telegram\n✅ Обновления: 4H',
-                params: '🔔 Звук: Вкл\n📱 Вибрация: Вкл\n📢 Канал: @filview\n🔄 Частота: реальное время'
-            },
-            'faq_questions': {
-                icon: '❓',
-                name: 'Частые вопросы',
-                subtitle: 'Ответы на вопросы',
-                price: '10 вопросов',
-                desc: 'Ответы на самые частые вопросы о стратегии.',
-                stats: '❓ Что такое фьючерсы?\n❓ Какой риск на сделку?\n❓ Какое плечо?\n❓ Как подписаться?',
-                params: '📚 База знаний обновляется\n🔄 Добавляем новые вопросы\n📢 Задавайте вопросы в канале'
-            },
-            'support': {
-                icon: '💬',
-                name: 'Поддержка',
-                subtitle: 'Чат для вопросов',
-                price: 'Отвечаем быстро',
-                desc: 'Если у вас остались вопросы, напишите нам.',
-                stats: '📊 Время ответа: ~5 мин\n👥 Активных пользователей: 1 847\n📈 Удовлетворённость: 98%',
-                params: '💬 Чат поддержки\n📢 Канал: @filview\n🦡 Автор: Медоед\n⏰ Работаем 24/7'
             }
         };
 
@@ -714,7 +656,8 @@
         renderMainMenu();
 
         try {
-            tg.MainButton.setText('📢 Подписаться');
+            // Меняем кнопку на "ТГ-КАНАЛ"
+            tg.MainButton.setText('📢 ТГ-КАНАЛ');
             tg.MainButton.show();
             tg.MainButton.onClick(function() {
                 tg.openTelegramLink('https://t.me/filview');
