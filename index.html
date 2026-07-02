@@ -31,16 +31,16 @@
             margin: 0 auto;
         }
 
-        /* HEADER */
+        /* HEADER — шире, больше отступов */
         .header {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 14px;
-            padding: 14px 16px 12px 16px;
+            padding: 20px 20px 18px 20px;
             margin-bottom: 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         .header h1 {
@@ -50,7 +50,7 @@
             color: #e8e6e3;
             text-transform: uppercase;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
-            white-space: nowrap; /* ТОЛЬКО ЗДЕСЬ — текст в одну строку */
+            white-space: nowrap;
         }
 
         /* СТАТИСТИКА */
@@ -85,7 +85,7 @@
             font-weight: 200;
         }
 
-        /* AUM + ПОДПИСЧИКИ */
+        /* AUM + ПОДПИСЧИКИ — рубли */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -360,15 +360,15 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER -->
+        <!-- HEADER — шире, больше отступов -->
         <div class="header">
             <h1>Фьючерсы Медоеда</h1>
         </div>
 
-        <!-- AUM + ПОДПИСЧИКИ -->
+        <!-- AUM + ПОДПИСЧИКИ — В РУБЛЯХ -->
         <div class="aum-grid">
             <div class="aum-card">
-                <div class="num green">$1 247 500</div>
+                <div class="num green">₽ 112 500 000</div>
                 <div class="label">В управлении</div>
             </div>
             <div class="aum-card">
@@ -493,16 +493,16 @@
                 icon: '💼',
                 name: 'Текущие позиции',
                 subtitle: '3 открытые позиции',
-                price: 'Общая маржа: $1 250',
+                price: 'Общая маржа: ₽ 112 500',
                 desc: 'Текущие открытые позиции по стратегии Медоеда.',
                 stats: 'BTC: BUY @ 62 100 (x3)\nETH: Ожидание @ 3 050\nSOL: SELL @ 168.00 (x2)',
-                params: 'Общая маржа: $1 250\nПлечо: x2-x3\nСледующий сигнал: 4H\nТекущий P&L: +2.3%'
+                params: 'Общая маржа: ₽ 112 500\nПлечо: x2-x3\nСледующий сигнал: 4H\nТекущий P&L: +2.3%'
             },
             'closed': {
                 icon: '✅',
                 name: 'Закрытые позиции',
                 subtitle: '156 сделок',
-                price: 'Общий профит: +$4 270',
+                price: 'Общий профит: +₽ 384 300',
                 desc: 'Все закрытые сделки стратегии Медоеда.',
                 stats: 'BTC +3.2%\nETH +1.8%\nSOL -2.1%\nBTC +4.5%\nETH +2.3%\nSOL +1.9%\nBTC -1.5%\nETH +3.1%\nSOL +2.7%\nBTC +5.2%',
                 params: 'Винрейт: 68%\nОбщая доходность: +42.7%\nВсего: 156 сделок\nСредний профит: +4.2%'
