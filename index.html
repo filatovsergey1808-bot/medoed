@@ -81,6 +81,7 @@
             background: rgba(245, 215, 66, 0.15);
         }
 
+        /* Большие статистические карточки */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -110,6 +111,41 @@
         }
         .stat-card .num.green { color: #6fcf97; }
         .stat-card .num.red { color: #eb5757; }
+
+        /* Специальные карточки AUM и подписчики */
+        .aum-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .aum-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+        }
+        .aum-card .icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        .aum-card .num {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f5d742;
+            letter-spacing: 0.5px;
+        }
+        .aum-card .num.green { color: #6fcf97; }
+        .aum-card .label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
 
         .grid {
             display: grid;
@@ -174,15 +210,15 @@
             font-size: 13px;
             font-weight: 400;
             color: #f0ece6;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 20px;
             cursor: pointer;
             transition: background 0.2s;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             width: fit-content;
         }
         .back-link:active {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
         }
         .submenu-header {
             display: flex;
@@ -208,7 +244,7 @@
             border-radius: 16px;
             padding: 20px;
             margin-top: 0;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .info-block .icon-big {
             font-size: 48px;
@@ -223,20 +259,20 @@
         }
         .info-block .subtitle {
             font-size: 13px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255, 255, 255, 0.3);
             margin-bottom: 12px;
         }
         .info-block .section {
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .info-block .section h4 {
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 1.5px;
             margin-bottom: 6px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
         }
         .info-block .section p {
@@ -253,9 +289,6 @@
             margin-top: 8px;
             letter-spacing: 0.5px;
         }
-        .info-block .price .change { font-size: 16px; font-weight: 400; }
-        .info-block .price .change.green { color: #6fcf97; }
-        .info-block .price .change.red { color: #eb5757; }
 
         .btn {
             display: block;
@@ -279,13 +312,13 @@
             opacity: 0.8;
             transform: scale(0.98);
         }
-        .btn-outline {
-            background: transparent;
-            color: #f0ece6;
-            border: 1px solid rgba(255,255,255,0.1);
+        .btn-subscribe {
+            background: rgba(245, 215, 66, 0.15);
+            color: #f5d742;
+            border: 1px solid rgba(245, 215, 66, 0.2);
         }
-        .btn-outline:active {
-            background: rgba(255,255,255,0.05);
+        .btn-subscribe:active {
+            background: rgba(245, 215, 66, 0.25);
         }
         .hidden {
             display: none !important;
@@ -301,32 +334,17 @@
         }
         .back-btn:active { opacity: 0.6; }
 
-        .signal-badge {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+        /* Стиль для подписчиков */
+        .subscriber-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #6fcf97;
         }
-        .signal-badge.buy { background: rgba(111, 207, 151, 0.15); color: #6fcf97; }
-        .signal-badge.sell { background: rgba(235, 87, 87, 0.15); color: #eb5757; }
-        .signal-badge.wait { background: rgba(245, 215, 66, 0.12); color: #f5d742; }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 13px;
-        }
-        .row .val { color: #f0ece6; }
-        .row .lbl { color: rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
-
     <div id="app">
+        <!-- HEADER -->
         <div class="header">
             <div class="logo">🦡</div>
             <h1>Фьючерсы Медоеда</h1>
@@ -335,9 +353,24 @@
             <a href="https://t.me/filview" target="_blank" class="channel-link">📢 @filview</a>
         </div>
 
-        <div class="stats-grid" id="statsGrid">
+        <!-- AUM + ПОДПИСЧИКИ -->
+        <div class="aum-grid">
+            <div class="aum-card">
+                <div class="icon">💰</div>
+                <div class="num green" id="aumValue">$1 247 500</div>
+                <div class="label">В управлении</div>
+            </div>
+            <div class="aum-card">
+                <div class="icon">👥</div>
+                <div class="num" id="subscriberCount">1 847</div>
+                <div class="label">Подписчиков</div>
+            </div>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="stats-grid">
             <div class="stat-card">
-                <div class="num" id="statProfit">+42.7%</div>
+                <div class="num green" id="statProfit">+42.7%</div>
                 <div class="label">Общая доходность</div>
             </div>
             <div class="stat-card">
@@ -350,89 +383,72 @@
             </div>
         </div>
 
+        <!-- ГЛАВНОЕ МЕНЮ -->
         <div id="gridContainer">
             <div class="grid" id="grid"></div>
         </div>
 
+        <!-- ДЕТАЛИ -->
         <div class="info-block hidden" id="detail">
             <button class="back-btn" id="backBtn">← Назад</button>
             <div class="icon-big" id="detailIcon">📊</div>
             <h3 id="detailName"></h3>
             <div class="subtitle" id="detailSubtitle"></div>
-            
             <div id="detailPrice"></div>
-
             <div class="section">
                 <h4>📝 Описание</h4>
                 <p id="detailDesc"></p>
             </div>
-            
             <div class="section">
-                <h4>📈 Сигнал</h4>
-                <p id="detailSignal"></p>
+                <h4>📊 Статистика</h4>
+                <p id="detailStats"></p>
             </div>
-            
-            <div class="section">
-                <h4>🎯 Уровни</h4>
-                <p id="detailLevels"></p>
-            </div>
-            
             <div class="section">
                 <h4>⚙️ Параметры</h4>
                 <p id="detailParams"></p>
             </div>
-
             <button class="btn btn-success" id="backToMenuBtn">В главное меню</button>
         </div>
     </div>
 
     <script>
         // ================================================================
-        // 1. ДАННЫЕ
+        // 1. TELEGRAM WEBAPP
         // ================================================================
-
-        // Проверка Telegram WebApp
         let tg;
         try {
             tg = window.Telegram.WebApp;
             tg.expand();
         } catch(e) {
-            console.log('Telegram WebApp not available');
             tg = {
                 expand: function() {},
-                MainButton: {
-                    show: function() {},
-                    onClick: function() {},
-                    setText: function() {}
-                },
-                HapticFeedback: {
-                    impactOccurred: function() {}
-                },
-                openTelegramLink: function(url) {
-                    window.open(url, '_blank');
-                }
+                MainButton: { show: function() {}, onClick: function() {}, setText: function() {} },
+                HapticFeedback: { impactOccurred: function() {} },
+                openTelegramLink: function(url) { window.open(url, '_blank'); }
             };
         }
 
-        // Основные категории
+        // ================================================================
+        // 2. ДАННЫЕ
+        // ================================================================
         const categories = [
             {
-                id: 'futures',
-                name: 'Фьючерсы',
-                icon: '📊',
+                id: 'strategy',
+                name: 'О стратегии',
+                icon: '📖',
                 items: [
-                    { id: 'btc', name: 'Bitcoin', symbol: 'BTC/USDT', badge: 'BUY' },
-                    { id: 'eth', name: 'Ethereum', symbol: 'ETH/USDT', badge: 'WAIT' },
-                    { id: 'sol', name: 'Solana', symbol: 'SOL/USDT', badge: 'SELL' }
+                    { id: 'about', name: 'Описание', badge: 'Медоед' },
+                    { id: 'rules', name: 'Правила', badge: 'Читать' },
+                    { id: 'results', name: 'Результаты', badge: '42.7%' }
                 ]
             },
             {
-                id: 'signals',
-                name: 'Сигналы',
-                icon: '📡',
+                id: 'subscribe',
+                name: 'Как подписаться',
+                icon: '🔗',
                 items: [
-                    { id: 'active', name: 'Активные', badge: '3 сигнала' },
-                    { id: 'history', name: 'История', badge: 'Последние 10' }
+                    { id: 'subscribe_guide', name: 'Инструкция', badge: 'Пошагово' },
+                    { id: 'channel', name: 'Наш канал', badge: '@filview' }
                 ]
             },
             {
@@ -440,12 +456,12 @@
                 name: 'Портфель',
                 icon: '💼',
                 items: [
-                    { id: 'positions', name: 'Открытые позиции', badge: '2' },
+                    { id: 'positions', name: 'Текущие позиции', badge: '3' },
                     { id: 'closed', name: 'Закрытые', badge: '156' }
                 ]
             },
             {
-                id: 'stats',
+                id: 'stats_detailed',
                 name: 'Статистика',
                 icon: '📈',
                 items: [
@@ -463,180 +479,139 @@
                 ]
             },
             {
-                id: 'info',
-                name: 'О стратегии',
-                icon: '📖',
+                id: 'faq',
+                name: 'FAQ',
+                icon: '❓',
                 items: [
-                    { id: 'about', name: 'Описание', badge: 'Медоед' },
-                    { id: 'rules', name: 'Правила', badge: 'Читать' }
+                    { id: 'faq_questions', name: 'Частые вопросы', badge: '10' },
+                    { id: 'support', name: 'Поддержка', badge: 'Чат' }
                 ]
             }
         ];
 
-        // Данные по инструментам
         const details = {
-            'btc': {
-                icon: '₿',
-                name: 'Bitcoin / USDT',
-                subtitle: 'Фьючерсный контракт',
-                price: '62 450',
-                change: '+2.3%',
-                changeDir: 'green',
-                desc: 'Флагманская криптовалюта. Стратегия Медоеда входит в лонг при пробое уровня 61 800 с подтверждением объёма.',
-                signal: '🟢 BUY @ 62 100\n🎯 Take Profit: 63 500\n🛑 Stop Loss: 61 200',
-                levels: '📊 Сопротивление: 63 500\n📊 Поддержка: 61 200\n📊 Ключевой уровень: 62 800',
-                params: '📐 Плечо: x3\n💰 Маржа: 5%\n⏳ Таймфрейм: 4H'
+            'about': {
+                icon: '📖',
+                name: 'О стратегии',
+                subtitle: 'Фьючерсы Медоеда',
+                price: 'Версия: 2.0',
+                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа.',
+                stats: '📊 Винрейт: 68%\n💰 Доходность: +42.7%\n📈 Сделок: 156\n🏆 Фактор прибыли: 2.3',
+                params: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n⏳ Таймфрейм: 4H\n📅 Запуск: 2024'
             },
-            'eth': {
-                icon: '⟠',
-                name: 'Ethereum / USDT',
-                subtitle: 'Фьючерсный контракт',
-                price: '3 120',
-                change: '-0.8%',
-                changeDir: 'red',
-                desc: 'Вторая по капитализации криптовалюта. Ожидаем подтверждения разворота от зоны 3 050.',
-                signal: '🟡 Ожидание\n🎯 Вход: 3 050\n🛑 Стоп: 2 980',
-                levels: '📊 Сопротивление: 3 200\n📊 Поддержка: 3 050\n📊 Ключевой уровень: 3 100',
-                params: '📐 Плечо: x2\n💰 Маржа: 5%\n⏳ Таймфрейм: 1H'
+            'rules': {
+                icon: '📋',
+                name: 'Правила стратегии',
+                subtitle: 'Соблюдайте риски',
+                price: 'Риск на сделку: 5%',
+                desc: 'Основные правила стратегии Фьючерсы Медоеда.',
+                stats: '📊 Макс. позиций: 3\n📊 Риск: 5% на сделку\n📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
+                params: '1️⃣ Вход: подтверждение объёмом\n2️⃣ Выход: Take Profit 1:2\n3️⃣ Стоп: ATR x 1.5\n4️⃣ Плечо: x2-x3'
             },
-            'sol': {
-                icon: '◎',
-                name: 'Solana / USDT',
-                subtitle: 'Фьючерсный контракт',
-                price: '168.50',
-                change: '-3.1%',
-                changeDir: 'red',
-                desc: 'Высокопроизводительный блокчейн. Стратегия фиксирует шорт при пробое 170 вниз.',
-                signal: '🔴 SELL @ 168.00\n🎯 Take Profit: 162.50\n🛑 Stop Loss: 171.00',
-                levels: '📊 Сопротивление: 172.00\n📊 Поддержка: 162.50\n📊 Ключевой уровень: 168.00',
-                params: '📐 Плечо: x2\n💰 Маржа: 5%\n⏳ Таймфрейм: 4H'
+            'results': {
+                icon: '🏆',
+                name: 'Результаты',
+                subtitle: 'Текущие показатели',
+                price: 'Доходность: +42.7%',
+                desc: 'Текущие результаты стратегии Фьючерсы Медоеда.',
+                stats: '📊 Общая доходность: +42.7%\n📊 Винрейт: 68%\n📊 Всего сделок: 156\n📊 Прибыльных: 106\n📊 Убыточных: 50',
+                params: '📈 Средний профит: +4.2%\n📉 Средний убыток: -1.8%\n🏆 Фактор прибыли: 2.3\n📅 Период: 2024'
             },
-            'active': {
-                icon: '📡',
-                name: 'Активные сигналы',
-                subtitle: '3 сигнала в работе',
-                price: 'BTC, ETH, SOL',
-                change: '',
-                changeDir: '',
-                desc: 'Текущие сигналы стратегии Медоеда. Обновление каждые 4 часа.',
-                signal: '1️⃣ BTC: BUY @ 62 100\n2️⃣ ETH: Ожидание @ 3 050\n3️⃣ SOL: SELL @ 168.00',
-                levels: '📊 BTC TP: 63 500\n📊 ETH вход: 3 050\n📊 SOL TP: 162.50',
-                params: '🔄 Обновление: 4H\n📊 Всего сигналов: 3\n📈 Винрейт: 68%'
+            'subscribe_guide': {
+                icon: '📝',
+                name: 'Как подписаться',
+                subtitle: 'Пошаговая инструкция',
+                price: 'Всего 3 шага',
+                desc: 'Подпишитесь на канал @filview и начните получать сигналы стратегии Медоеда.',
+                stats: '👥 Подписчиков: 1 847\n💰 В управлении: $1 247 500\n📈 Доходность: +42.7%',
+                params: '1️⃣ Нажмите кнопку "Подписаться" внизу\n2️⃣ Перейдите в канал @filview\n3️⃣ Нажмите "Подписаться" в Telegram\n4️⃣ Готово! Вы в стратегии'
             },
-            'history': {
-                icon: '📜',
-                name: 'История сигналов',
-                subtitle: 'Последние 10 сделок',
-                price: 'Прибыль: +42.7%',
-                change: '',
-                changeDir: '',
-                desc: 'Последние 10 сделок стратегии Медоеда с результатами.',
-                signal: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%',
-                levels: '📊 Средний профит: +4.2%\n📊 Средний убыток: -1.8%\n📊 Фактор прибыли: 2.3',
-                params: '📅 Всего: 156 сделок\n📈 Винрейт: 68%\n💰 Общая доходность: +42.7%'
+            'channel': {
+                icon: '📢',
+                name: 'Наш канал',
+                subtitle: '@filview',
+                price: 'Подписчиков: 1 847',
+                desc: 'Основной канал стратегии Фьючерсы Медоеда. Здесь публикуются все обновления.',
+                stats: '📊 Публикаций: 250+\n👥 Подписчиков: 1 847\n📈 Рост: +12% за месяц',
+                params: '🔗 Ссылка: t.me/filview\n🦡 Автор: Медоед\n📅 Создан: 2024'
             },
             'positions': {
                 icon: '💼',
-                name: 'Открытые позиции',
-                subtitle: '2 позиции',
+                name: 'Текущие позиции',
+                subtitle: '3 открытые позиции',
                 price: 'Общая маржа: $1 250',
-                change: '',
-                changeDir: '',
                 desc: 'Текущие открытые позиции по стратегии Медоеда.',
-                signal: '🟢 BTC: BUY @ 62 100 (x3)\n🔴 SOL: SELL @ 168.00 (x2)',
-                levels: '📊 BTC TP: 63 500 | SL: 61 200\n📊 SOL TP: 162.50 | SL: 171.00',
-                params: '💰 Общая маржа: $1 250\n📊 Плечо: x2-x3\n🔄 Следующий сигнал: 4H'
+                stats: '🟢 BTC: BUY @ 62 100 (x3)\n🟡 ETH: Ожидание @ 3 050\n🔴 SOL: SELL @ 168.00 (x2)',
+                params: '💰 Общая маржа: $1 250\n📊 Плечо: x2-x3\n🔄 Следующий сигнал: 4H\n📈 Текущий P&L: +2.3%'
             },
             'closed': {
                 icon: '✅',
                 name: 'Закрытые позиции',
                 subtitle: '156 сделок',
                 price: 'Общий профит: +$4 270',
-                change: '',
-                changeDir: '',
                 desc: 'Все закрытые сделки стратегии Медоеда.',
-                signal: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%',
-                levels: '📊 Средний профит: +4.2%\n📊 Средний убыток: -1.8%',
-                params: '📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📅 Всего: 156 сделок'
+                stats: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%',
+                params: '📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📅 Всего: 156 сделок\n📊 Средний профит: +4.2%'
             },
             'detailed': {
                 icon: '📈',
                 name: 'Детальная статистика',
                 subtitle: 'Полный анализ',
                 price: 'Доходность: +42.7%',
-                change: '',
-                changeDir: '',
                 desc: 'Подробная статистика стратегии Фьючерсы Медоеда.',
-                signal: '📊 Винрейт: 68%\n💰 Прибыль: +$4 270\n📉 Убыток: -$1 230',
-                levels: '📊 Макс. профит: +8.2%\n📊 Макс. убыток: -3.5%\n📊 Средняя сделка: +2.8%',
-                params: '📈 Sharpe: 1.8\n📊 Win/Loss: 2.3\n🔄 Сделок: 156'
+                stats: '📊 Винрейт: 68%\n💰 Прибыль: +$4 270\n📉 Убыток: -$1 230\n🏆 Фактор прибыли: 2.3',
+                params: '📈 Sharpe: 1.8\n📊 Win/Loss: 2.3\n🔄 Сделок: 156\n📈 Средняя сделка: +2.8%'
             },
             'monthly': {
                 icon: '📅',
                 name: 'По месяцам',
                 subtitle: '2024 год',
                 price: 'Июнь: +8.2%',
-                change: '',
-                changeDir: '',
                 desc: 'Доходность стратегии по месяцам.',
-                signal: '📊 Янв: +2.1%\n📊 Фев: +3.4%\n📊 Мар: +5.6%\n📊 Апр: +4.2%\n📊 Май: +7.8%',
-                levels: '📊 Лучший месяц: Май (+7.8%)\n📊 Худший месяц: Янв (+2.1%)',
-                params: '📈 Средняя: +4.6%\n📊 Всего: +42.7%\n📅 2024 год'
+                stats: '📊 Янв: +2.1%\n📊 Фев: +3.4%\n📊 Мар: +5.6%\n📊 Апр: +4.2%\n📊 Май: +7.8%\n📊 Июн: +8.2%',
+                params: '📈 Лучший месяц: Июнь (+8.2%)\n📉 Худший месяц: Янв (+2.1%)\n📊 Средняя: +4.6%\n📅 Всего: +42.7%'
             },
             'risk': {
                 icon: '🛡️',
                 name: 'Управление рисками',
                 subtitle: 'Настройки',
                 price: 'Риск на сделку: 5%',
-                change: '',
-                changeDir: '',
                 desc: 'Параметры управления рисками стратегии Медоеда.',
-                signal: '📊 Риск на сделку: 5%\n📊 Макс. позиций: 3\n📊 Стоп-лосс: динамический',
-                levels: '📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
-                params: '📐 Плечо: x2-x3\n💰 Маржа: 5%\n🛑 Стоп: ATR-based'
+                stats: '📊 Риск на сделку: 5%\n📊 Макс. позиций: 3\n📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
+                params: '📐 Плечо: x2-x3\n💰 Маржа: 5%\n🛑 Стоп: ATR-based\n📈 Динамический стоп: Вкл'
             },
             'notify': {
                 icon: '🔔',
                 name: 'Уведомления',
                 subtitle: 'Настройки',
                 price: 'Статус: Включены',
-                change: '',
-                changeDir: '',
                 desc: 'Настройки уведомлений о сигналах и сделках.',
-                signal: '✅ Сигналы: Telegram\n✅ Сделки: Telegram\n✅ Обновления: 4H',
-                levels: '📊 Канал: @filview\n📊 Частота: реальное время',
-                params: '🔔 Звук: Вкл\n📱 Вибрация: Вкл'
+                stats: '✅ Сигналы: Telegram\n✅ Сделки: Telegram\n✅ Обновления: 4H',
+                params: '🔔 Звук: Вкл\n📱 Вибрация: Вкл\n📢 Канал: @filview\n🔄 Частота: реальное время'
             },
-            'about': {
-                icon: '📖',
-                name: 'О стратегии',
-                subtitle: 'Фьючерсы Медоеда',
-                price: 'Версия: 2.0',
-                change: '',
-                changeDir: '',
-                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа.',
-                signal: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n🎯 Цель: 40-60% годовых',
-                levels: '📊 Таймфрейм: 4H\n📊 Рынки: Криптофьючерсы',
-                params: '📈 Автор: @filview\n📅 Запуск: 2024\n🔒 Приватная стратегия'
+            'faq_questions': {
+                icon: '❓',
+                name: 'Частые вопросы',
+                subtitle: 'Ответы на вопросы',
+                price: '10 вопросов',
+                desc: 'Ответы на самые частые вопросы о стратегии.',
+                stats: '❓ Что такое фьючерсы?\n❓ Какой риск на сделку?\n❓ Какое плечо?\n❓ Как подписаться?',
+                params: '📚 База знаний обновляется\n🔄 Добавляем новые вопросы\n📢 Задавайте вопросы в канале'
             },
-            'rules': {
-                icon: '📋',
-                name: 'Правила',
-                subtitle: 'Стратегия',
-                price: 'Соблюдайте риски',
-                change: '',
-                changeDir: '',
-                desc: 'Основные правила стратегии Фьючерсы Медоеда.',
-                signal: '1️⃣ Вход: подтверждение объёмом\n2️⃣ Выход: Take Profit 2:1\n3️⃣ Стоп: ATR x 1.5',
-                levels: '📊 Макс. позиций: 3\n📊 Риск: 5% на сделку',
-                params: '📈 Соблюдение правил - обязательно!'
+            'support': {
+                icon: '💬',
+                name: 'Поддержка',
+                subtitle: 'Чат для вопросов',
+                price: 'Отвечаем быстро',
+                desc: 'Если у вас остались вопросы, напишите нам.',
+                stats: '📊 Время ответа: ~5 мин\n👥 Активных пользователей: 1 847\n📈 Удовлетворённость: 98%',
+                params: '💬 Чат поддержки\n📢 Канал: @filview\n🦡 Автор: Медоед\n⏰ Работаем 24/7'
             }
         };
 
         // ================================================================
-        // 2. ЛОГИКА
+        // 3. ЛОГИКА
         // ================================================================
-
         let currentView = 'main';
         let currentCategoryId = null;
 
@@ -681,12 +656,11 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 const data = details[item.id];
-                const badgeClass = item.badge === 'BUY' ? 'green' : (item.badge === 'SELL' ? 'red' : '');
                 card.innerHTML = `
                     <div class="icon">${data ? data.icon : '📊'}</div>
                     <div class="info">
                         <div class="name">${item.name}</div>
-                        <div class="badge ${badgeClass}">${item.badge}</div>
+                        <div class="badge">${item.badge}</div>
                     </div>
                 `;
                 card.onclick = () => showDetail(item.id);
@@ -706,22 +680,12 @@
             document.getElementById('detailName').textContent = data.name;
             document.getElementById('detailSubtitle').textContent = data.subtitle || '';
 
-            const priceHtml = data.price ? `
-                <div class="price">
-                    ${data.price}
-                    ${data.change ? `<span class="change ${data.changeDir || ''}"> ${data.change}</span>` : ''}
-                </div>
-            ` : '';
-            document.getElementById('detailPrice').innerHTML = priceHtml;
-
+            document.getElementById('detailPrice').innerHTML = data.price ? `<div class="price">${data.price}</div>` : '';
             document.getElementById('detailDesc').textContent = data.desc || '';
-            document.getElementById('detailSignal').textContent = data.signal || '';
-            document.getElementById('detailLevels').textContent = data.levels || '';
+            document.getElementById('detailStats').textContent = data.stats || '';
             document.getElementById('detailParams').textContent = data.params || '';
 
-            try {
-                tg.HapticFeedback.impactOccurred('medium');
-            } catch(e) {}
+            try { tg.HapticFeedback.impactOccurred('medium'); } catch(e) {}
         }
 
         function goToMainMenu() {
@@ -732,37 +696,30 @@
         }
 
         // ================================================================
-        // 3. ОБРАБОТЧИКИ
+        // 4. ОБРАБОТЧИКИ
         // ================================================================
-
         document.getElementById('backBtn').onclick = function() {
             if (currentView === 'detail') {
                 document.getElementById('detail').classList.add('hidden');
                 document.getElementById('grid').classList.remove('hidden');
-                if (currentCategoryId) {
-                    renderSubMenu(currentCategoryId);
-                } else {
-                    renderMainMenu();
-                }
+                if (currentCategoryId) { renderSubMenu(currentCategoryId); }
+                else { renderMainMenu(); }
             }
         };
         document.getElementById('backToMenuBtn').onclick = goToMainMenu;
 
         // ================================================================
-        // 4. ЗАПУСК
+        // 5. ЗАПУСК
         // ================================================================
-
         renderMainMenu();
 
         try {
-            tg.MainButton.setText('Открыть канал');
+            tg.MainButton.setText('📢 Подписаться');
             tg.MainButton.show();
             tg.MainButton.onClick(function() {
                 tg.openTelegramLink('https://t.me/filview');
             });
-        } catch(e) {
-            console.log('MainButton error:', e);
-        }
+        } catch(e) { console.log('MainButton error:', e); }
     </script>
 </body>
 </html>
