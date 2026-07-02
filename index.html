@@ -145,9 +145,10 @@
             margin-top: 4px;
         }
 
+        /* КНОПКИ НА ВСЮ ШИРИНУ */
         .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 12px;
             width: 100%;
         }
@@ -171,11 +172,11 @@
         }
         .card .icon {
             width: 100%;
-            height: 100px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 32px;
             background: rgba(245, 215, 66, 0.04);
         }
         .card .info {
@@ -184,14 +185,14 @@
         }
         .card .name {
             font-weight: 500;
-            font-size: 14px;
+            font-size: 16px;
             letter-spacing: 0.5px;
             color: #f0ece6;
         }
         .card .badge {
             display: inline-block;
-            font-size: 9px;
-            padding: 2px 10px;
+            font-size: 10px;
+            padding: 2px 12px;
             border-radius: 10px;
             margin-top: 4px;
             letter-spacing: 0.5px;
@@ -310,6 +311,17 @@
             opacity: 0.8;
             transform: scale(0.98);
         }
+        .btn-tg {
+            background: rgba(245, 215, 66, 0.12);
+            color: #f5d742;
+            border: 2px solid rgba(245, 215, 66, 0.25);
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        .btn-tg:active {
+            background: rgba(245, 215, 66, 0.25);
+            transform: scale(0.98);
+        }
         .hidden {
             display: none !important;
         }
@@ -324,17 +336,38 @@
         }
         .back-btn:active { opacity: 0.6; }
 
-        /* Стиль для кнопки ТГ-КАНАЛ */
-        .btn-tg {
+        .subscribe-steps {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        .subscribe-steps .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .subscribe-steps .step:last-child {
+            border-bottom: none;
+        }
+        .subscribe-steps .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             background: rgba(245, 215, 66, 0.12);
             color: #f5d742;
-            border: 2px solid rgba(245, 215, 66, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 2px;
+            flex-shrink: 0;
         }
-        .btn-tg:active {
-            background: rgba(245, 215, 66, 0.25);
-            transform: scale(0.98);
+        .subscribe-steps .step-text {
+            font-size: 14px;
+            color: #d0d0d0;
         }
     </style>
 </head>
@@ -379,7 +412,7 @@
             </div>
         </div>
 
-        <!-- ГЛАВНОЕ МЕНЮ -->
+        <!-- ГЛАВНОЕ МЕНЮ (КНОПКИ НА ВСЮ ШИРИНУ) -->
         <div id="gridContainer">
             <div class="grid" id="grid"></div>
         </div>
@@ -391,19 +424,34 @@
             <h3 id="detailName"></h3>
             <div class="subtitle" id="detailSubtitle"></div>
             <div id="detailPrice"></div>
-            <div class="section">
-                <h4>📝 Описание</h4>
-                <p id="detailDesc"></p>
+            
+            <!-- Описание стратегии (для пункта "О стратегии") -->
+            <div id="strategyContent">
+                <div class="section">
+                    <h4>📝 Описание</h4>
+                    <p id="detailDesc"></p>
+                </div>
+                <div class="section">
+                    <h4>📊 Статистика</h4>
+                    <p id="detailStats"></p>
+                </div>
+                <div class="section">
+                    <h4>⚙️ Параметры</h4>
+                    <p id="detailParams"></p>
+                </div>
             </div>
-            <div class="section">
-                <h4>📊 Статистика</h4>
-                <p id="detailStats"></p>
+
+            <!-- Контент для подписки (инструкция) -->
+            <div id="subscribeContent" class="hidden">
+                <div class="section">
+                    <h4>📝 Как подписаться</h4>
+                    <p id="subscribeDesc"></p>
+                </div>
+                <div class="subscribe-steps" id="subscribeSteps"></div>
+                <button class="btn btn-tg" id="subscribeBtn">📢 Перейти в канал</button>
             </div>
-            <div class="section">
-                <h4>⚙️ Параметры</h4>
-                <p id="detailParams"></p>
-            </div>
-            <button class="btn btn-success" id="backToMenuBtn">В главное меню</button>
+
+            <button class="btn btn-success" id="backToMenuBtn">На главную</button>
         </div>
     </div>
 
@@ -427,92 +475,67 @@
         // ================================================================
         // 2. ДАННЫЕ
         // ================================================================
+        
+        // Главное меню - 4 кнопки
         const categories = [
             {
                 id: 'strategy',
                 name: 'О стратегии',
-                icon: '📖',
-                items: [
-                    { id: 'about', name: 'Описание', badge: 'Медоед' },
-                    { id: 'rules', name: 'Правила', badge: 'Читать' },
-                    { id: 'results', name: 'Результаты', badge: '42.7%' }
-                ]
-            },
-            {
-                id: 'subscribe',
-                name: 'Как подписаться',
-                icon: '🔗',
-                items: [
-                    { id: 'subscribe_guide', name: 'Инструкция', badge: 'Пошагово' },
-                    { id: 'channel', name: 'Наш канал', badge: '@filview' }
-                ]
-            },
-            {
-                id: 'portfolio',
-                name: 'Портфель',
-                icon: '💼',
-                items: [
-                    { id: 'positions', name: 'Текущие позиции', badge: '3' },
-                    { id: 'closed', name: 'Закрытые', badge: '156' }
-                ]
+                icon: '📖'
             },
             {
                 id: 'stats_detailed',
                 name: 'Статистика',
-                icon: '📈',
-                items: [
-                    { id: 'detailed', name: 'Детальная', badge: 'Графики' },
-                    { id: 'monthly', name: 'По месяцам', badge: '2024' }
-                ]
+                icon: '📈'
+            },
+            {
+                id: 'portfolio',
+                name: 'Портфель',
+                icon: '💼'
+            },
+            {
+                id: 'subscribe',
+                name: 'Подписаться',
+                icon: '🔗'
             }
         ];
 
+        // Данные для страниц
         const details = {
-            'about': {
+            // --- О СТРАТЕГИИ (всё сразу) ---
+            'strategy': {
                 icon: '📖',
                 name: 'О стратегии',
                 subtitle: 'Фьючерсы Медоеда',
                 price: 'Версия: 2.0',
-                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа.',
+                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа. Торгуем криптофьючерсы с плечом x2-x3. Таймфрейм 4H.',
                 stats: '📊 Винрейт: 68%\n💰 Доходность: +42.7%\n📈 Сделок: 156\n🏆 Фактор прибыли: 2.3',
-                params: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n⏳ Таймфрейм: 4H\n📅 Запуск: 2024'
+                params: '🦡 Основа: трендовый анализ\n📊 Индикаторы: EMA, RSI, Volume\n⏳ Таймфрейм: 4H\n📅 Запуск: 2024\n📐 Плечо: x2-x3\n🛡️ Риск: 5% на сделку'
             },
-            'rules': {
-                icon: '📋',
-                name: 'Правила стратегии',
-                subtitle: 'Соблюдайте риски',
-                price: 'Риск на сделку: 5%',
-                desc: 'Основные правила стратегии Фьючерсы Медоеда.',
-                stats: '📊 Макс. позиций: 3\n📊 Риск: 5% на сделку\n📊 Дневной лимит: -10%\n📊 Недельный лимит: -20%',
-                params: '1️⃣ Вход: подтверждение объёмом\n2️⃣ Выход: Take Profit 1:2\n3️⃣ Стоп: ATR x 1.5\n4️⃣ Плечо: x2-x3'
-            },
-            'results': {
-                icon: '🏆',
-                name: 'Результаты',
-                subtitle: 'Текущие показатели',
+            
+            // --- СТАТИСТИКА: ЗА ВСЁ ВРЕМЯ ---
+            'all_time': {
+                icon: '📊',
+                name: 'За всё время',
+                subtitle: 'Полная статистика',
                 price: 'Доходность: +42.7%',
-                desc: 'Текущие результаты стратегии Фьючерсы Медоеда.',
-                stats: '📊 Общая доходность: +42.7%\n📊 Винрейт: 68%\n📊 Всего сделок: 156\n📊 Прибыльных: 106\n📊 Убыточных: 50',
-                params: '📈 Средний профит: +4.2%\n📉 Средний убыток: -1.8%\n🏆 Фактор прибыли: 2.3\n📅 Период: 2024'
+                desc: 'Статистика стратегии Фьючерсы Медоеда за весь период.',
+                stats: '📊 Всего сделок: 156\n✅ Прибыльных: 106\n❌ Убыточных: 50\n📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📈 Средний профит: +4.2%\n📉 Средний убыток: -1.8%\n🏆 Фактор прибыли: 2.3\n📊 Sharpe: 1.8',
+                params: '📅 Период: 2024\n🔄 Сделок: 156\n📈 Лучшая сделка: +8.2%\n📉 Худшая сделка: -3.5%'
             },
-            'subscribe_guide': {
-                icon: '📝',
-                name: 'Как подписаться',
-                subtitle: 'Пошаговая инструкция',
-                price: 'Всего 3 шага',
-                desc: 'Подпишитесь на канал @filview и начните получать сигналы стратегии Медоеда.',
-                stats: '👥 Подписчиков: 1 847\n💰 В управлении: $1 247 500\n📈 Доходность: +42.7%',
-                params: '1️⃣ Нажмите кнопку "ТГ-КАНАЛ" внизу\n2️⃣ Перейдите в канал @filview\n3️⃣ Нажмите "Подписаться" в Telegram\n4️⃣ Готово! Вы в стратегии'
+            
+            // --- СТАТИСТИКА: ЗА ПОСЛЕДНИЙ МЕСЯЦ ---
+            'last_month': {
+                icon: '📅',
+                name: 'За последний месяц',
+                subtitle: 'Июнь 2024',
+                price: 'Доходность: +8.2%',
+                desc: 'Статистика стратегии за последний месяц (июнь 2024).',
+                stats: '📊 Сделок: 24\n✅ Прибыльных: 17\n❌ Убыточных: 7\n📈 Винрейт: 71%\n💰 Доходность: +8.2%\n📈 Средний профит: +5.1%\n📉 Средний убыток: -1.9%',
+                params: '📅 Период: Июнь 2024\n🔄 Сделок: 24\n📈 Лучшая сделка: +7.2%\n📉 Худшая сделка: -2.8%'
             },
-            'channel': {
-                icon: '📢',
-                name: 'Наш канал',
-                subtitle: '@filview',
-                price: 'Подписчиков: 1 847',
-                desc: 'Основной канал стратегии Фьючерсы Медоеда. Здесь публикуются все обновления.',
-                stats: '📊 Публикаций: 250+\n👥 Подписчиков: 1 847\n📈 Рост: +12% за месяц',
-                params: '🔗 Ссылка: t.me/filview\n🦡 Автор: Медоед\n📅 Создан: 2024'
-            },
+            
+            // --- ПОРТФЕЛЬ: ТЕКУЩИЕ ПОЗИЦИИ ---
             'positions': {
                 icon: '💼',
                 name: 'Текущие позиции',
@@ -522,32 +545,32 @@
                 stats: '🟢 BTC: BUY @ 62 100 (x3)\n🟡 ETH: Ожидание @ 3 050\n🔴 SOL: SELL @ 168.00 (x2)',
                 params: '💰 Общая маржа: $1 250\n📊 Плечо: x2-x3\n🔄 Следующий сигнал: 4H\n📈 Текущий P&L: +2.3%'
             },
+            
+            // --- ПОРТФЕЛЬ: ЗАКРЫТЫЕ ---
             'closed': {
                 icon: '✅',
                 name: 'Закрытые позиции',
                 subtitle: '156 сделок',
                 price: 'Общий профит: +$4 270',
                 desc: 'Все закрытые сделки стратегии Медоеда.',
-                stats: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%',
+                stats: '✅ BTC +3.2%\n✅ ETH +1.8%\n❌ SOL -2.1%\n✅ BTC +4.5%\n✅ ETH +2.3%\n✅ SOL +1.9%\n❌ BTC -1.5%\n✅ ETH +3.1%\n✅ SOL +2.7%\n✅ BTC +5.2%',
                 params: '📈 Винрейт: 68%\n💰 Общая доходность: +42.7%\n📅 Всего: 156 сделок\n📊 Средний профит: +4.2%'
             },
-            'detailed': {
-                icon: '📈',
-                name: 'Детальная статистика',
-                subtitle: 'Полный анализ',
-                price: 'Доходность: +42.7%',
-                desc: 'Подробная статистика стратегии Фьючерсы Медоеда.',
-                stats: '📊 Винрейт: 68%\n💰 Прибыль: +$4 270\n📉 Убыток: -$1 230\n🏆 Фактор прибыли: 2.3',
-                params: '📈 Sharpe: 1.8\n📊 Win/Loss: 2.3\n🔄 Сделок: 156\n📈 Средняя сделка: +2.8%'
-            },
-            'monthly': {
-                icon: '📅',
-                name: 'По месяцам',
-                subtitle: '2024 год',
-                price: 'Июнь: +8.2%',
-                desc: 'Доходность стратегии по месяцам.',
-                stats: '📊 Янв: +2.1%\n📊 Фев: +3.4%\n📊 Мар: +5.6%\n📊 Апр: +4.2%\n📊 Май: +7.8%\n📊 Июн: +8.2%',
-                params: '📈 Лучший месяц: Июнь (+8.2%)\n📉 Худший месяц: Янв (+2.1%)\n📊 Средняя: +4.6%\n📅 Всего: +42.7%'
+            
+            // --- ПОДПИСАТЬСЯ (инструкция) ---
+            'subscribe': {
+                icon: '🔗',
+                name: 'Как подписаться',
+                subtitle: '3 простых шага',
+                price: '',
+                desc: 'Подпишитесь на канал @filview и начните получать сигналы стратегии Медоеда.',
+                stats: '',
+                params: '',
+                steps: [
+                    'Нажмите кнопку "Перейти в канал" ниже',
+                    'Нажмите "Подписаться" в Telegram',
+                    'Готово! Вы в стратегии! 🦡'
+                ]
             }
         };
 
@@ -562,6 +585,7 @@
             const grid = document.getElementById('grid');
             grid.className = 'grid';
             grid.innerHTML = '';
+            
             categories.forEach(cat => {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -569,18 +593,26 @@
                     <div class="icon">${cat.icon}</div>
                     <div class="info">
                         <div class="name">${cat.name}</div>
-                        <div class="badge">${cat.items.length}</div>
                     </div>
                 `;
-                card.onclick = () => renderSubMenu(cat.id);
+                card.onclick = () => {
+                    if (cat.id === 'strategy') {
+                        showDetail('strategy');
+                    } else if (cat.id === 'stats_detailed') {
+                        renderStatsMenu();
+                    } else if (cat.id === 'portfolio') {
+                        renderPortfolioMenu();
+                    } else if (cat.id === 'subscribe') {
+                        showDetail('subscribe');
+                    }
+                };
                 grid.appendChild(card);
             });
         }
 
-        function renderSubMenu(categoryId) {
+        function renderStatsMenu() {
             currentView = 'submenu';
-            currentCategoryId = categoryId;
-            const category = categories.find(c => c.id === categoryId);
+            currentCategoryId = 'stats_detailed';
             const grid = document.getElementById('grid');
             grid.className = 'grid submenu';
             grid.innerHTML = '';
@@ -589,20 +621,59 @@
             header.className = 'submenu-header';
             header.innerHTML = `
                 <span class="back-link" id="submenuBackBtn">← Назад</span>
-                <span class="category-title">${category.icon} ${category.name}</span>
+                <span class="category-title">📈 Статистика</span>
             `;
             grid.appendChild(header);
             document.getElementById('submenuBackBtn').onclick = renderMainMenu;
 
-            category.items.forEach(item => {
+            // Две кнопки: "За всё время" и "За последний месяц"
+            const statsItems = [
+                { id: 'all_time', name: 'За всё время', icon: '📊' },
+                { id: 'last_month', name: 'За последний месяц', icon: '📅' }
+            ];
+
+            statsItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                const data = details[item.id];
                 card.innerHTML = `
-                    <div class="icon">${data ? data.icon : '📊'}</div>
+                    <div class="icon">${item.icon}</div>
                     <div class="info">
                         <div class="name">${item.name}</div>
-                        <div class="badge">${item.badge}</div>
+                    </div>
+                `;
+                card.onclick = () => showDetail(item.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function renderPortfolioMenu() {
+            currentView = 'submenu';
+            currentCategoryId = 'portfolio';
+            const grid = document.getElementById('grid');
+            grid.className = 'grid submenu';
+            grid.innerHTML = '';
+
+            const header = document.createElement('div');
+            header.className = 'submenu-header';
+            header.innerHTML = `
+                <span class="back-link" id="submenuBackBtn">← Назад</span>
+                <span class="category-title">💼 Портфель</span>
+            `;
+            grid.appendChild(header);
+            document.getElementById('submenuBackBtn').onclick = renderMainMenu;
+
+            const portfolioItems = [
+                { id: 'positions', name: 'Текущие позиции', icon: '📊' },
+                { id: 'closed', name: 'Закрытые', icon: '✅' }
+            ];
+
+            portfolioItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="icon">${item.icon}</div>
+                    <div class="info">
+                        <div class="name">${item.name}</div>
                     </div>
                 `;
                 card.onclick = () => showDetail(item.id);
@@ -618,11 +689,47 @@
             document.getElementById('grid').classList.add('hidden');
             document.getElementById('detail').classList.remove('hidden');
 
+            // Показываем/скрываем блоки
+            const strategyContent = document.getElementById('strategyContent');
+            const subscribeContent = document.getElementById('subscribeContent');
+
+            if (id === 'strategy') {
+                strategyContent.classList.remove('hidden');
+                subscribeContent.classList.add('hidden');
+            } else if (id === 'subscribe') {
+                strategyContent.classList.add('hidden');
+                subscribeContent.classList.remove('hidden');
+                
+                // Заполняем инструкцию по подписке
+                document.getElementById('subscribeDesc').textContent = data.desc || '';
+                const stepsContainer = document.getElementById('subscribeSteps');
+                stepsContainer.innerHTML = '';
+                if (data.steps) {
+                    data.steps.forEach((step, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'step';
+                        div.innerHTML = `
+                            <div class="step-num">${index + 1}</div>
+                            <div class="step-text">${step}</div>
+                        `;
+                        stepsContainer.appendChild(div);
+                    });
+                }
+                document.getElementById('subscribeBtn').onclick = function() {
+                    tg.openTelegramLink('https://t.me/filview');
+                };
+            } else {
+                strategyContent.classList.remove('hidden');
+                subscribeContent.classList.add('hidden');
+            }
+
+            // Заполняем общие поля
             document.getElementById('detailIcon').textContent = data.icon || '📊';
             document.getElementById('detailName').textContent = data.name;
             document.getElementById('detailSubtitle').textContent = data.subtitle || '';
-
             document.getElementById('detailPrice').innerHTML = data.price ? `<div class="price">${data.price}</div>` : '';
+            
+            // Заполняем поля стратегии
             document.getElementById('detailDesc').textContent = data.desc || '';
             document.getElementById('detailStats').textContent = data.stats || '';
             document.getElementById('detailParams').textContent = data.params || '';
@@ -644,8 +751,13 @@
             if (currentView === 'detail') {
                 document.getElementById('detail').classList.add('hidden');
                 document.getElementById('grid').classList.remove('hidden');
-                if (currentCategoryId) { renderSubMenu(currentCategoryId); }
-                else { renderMainMenu(); }
+                if (currentCategoryId === 'stats_detailed') {
+                    renderStatsMenu();
+                } else if (currentCategoryId === 'portfolio') {
+                    renderPortfolioMenu();
+                } else {
+                    renderMainMenu();
+                }
             }
         };
         document.getElementById('backToMenuBtn').onclick = goToMainMenu;
@@ -655,14 +767,10 @@
         // ================================================================
         renderMainMenu();
 
+        // Убираем кнопку снизу
         try {
-            // Меняем кнопку на "ТГ-КАНАЛ"
-            tg.MainButton.setText('📢 ТГ-КАНАЛ');
-            tg.MainButton.show();
-            tg.MainButton.onClick(function() {
-                tg.openTelegramLink('https://t.me/filview');
-            });
-        } catch(e) { console.log('MainButton error:', e); }
+            tg.MainButton.hide();
+        } catch(e) {}
     </script>
 </body>
 </html>
