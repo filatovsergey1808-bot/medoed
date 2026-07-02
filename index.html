@@ -199,8 +199,6 @@
             background: rgba(245, 215, 66, 0.12);
             color: #f5d742;
         }
-        .card .badge.green { background: rgba(111, 207, 151, 0.12); color: #6fcf97; }
-        .card .badge.red { background: rgba(235, 87, 87, 0.12); color: #eb5757; }
 
         .back-link {
             display: inline-block;
@@ -425,18 +423,18 @@
             <div class="subtitle" id="detailSubtitle"></div>
             <div id="detailPrice"></div>
             
-            <!-- Описание стратегии (для пункта "О стратегии") -->
-            <div id="strategyContent">
+            <!-- Контент для всех страниц -->
+            <div id="detailContent">
                 <div class="section">
-                    <h4>📝 Описание</h4>
+                    <h4 id="detailSection1Title">📝 Описание</h4>
                     <p id="detailDesc"></p>
                 </div>
                 <div class="section">
-                    <h4>📊 Статистика</h4>
+                    <h4 id="detailSection2Title">📊 Статистика</h4>
                     <p id="detailStats"></p>
                 </div>
                 <div class="section">
-                    <h4>⚙️ Параметры</h4>
+                    <h4 id="detailSection3Title">⚙️ Параметры</h4>
                     <p id="detailParams"></p>
                 </div>
             </div>
@@ -501,7 +499,7 @@
         ];
 
         // Данные для страниц
-        const details = {
+        const detailsData = {
             // --- О СТРАТЕГИИ (всё сразу) ---
             'strategy': {
                 icon: '📖',
@@ -595,7 +593,7 @@
                         <div class="name">${cat.name}</div>
                     </div>
                 `;
-                card.onclick = () => {
+                card.onclick = function() {
                     if (cat.id === 'strategy') {
                         showDetail('strategy');
                     } else if (cat.id === 'stats_detailed') {
@@ -626,13 +624,12 @@
             grid.appendChild(header);
             document.getElementById('submenuBackBtn').onclick = renderMainMenu;
 
-            // Две кнопки: "За всё время" и "За последний месяц"
             const statsItems = [
                 { id: 'all_time', name: 'За всё время', icon: '📊' },
                 { id: 'last_month', name: 'За последний месяц', icon: '📅' }
             ];
 
-            statsItems.forEach(item => {
+            statsItems.forEach(function(item) {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
@@ -641,7 +638,7 @@
                         <div class="name">${item.name}</div>
                     </div>
                 `;
-                card.onclick = () => showDetail(item.id);
+                card.onclick = function() { showDetail(item.id); };
                 grid.appendChild(card);
             });
         }
@@ -667,7 +664,7 @@
                 { id: 'closed', name: 'Закрытые', icon: '✅' }
             ];
 
-            portfolioItems.forEach(item => {
+            portfolioItems.forEach(function(item) {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
@@ -676,36 +673,33 @@
                         <div class="name">${item.name}</div>
                     </div>
                 `;
-                card.onclick = () => showDetail(item.id);
+                card.onclick = function() { showDetail(item.id); };
                 grid.appendChild(card);
             });
         }
 
         function showDetail(id) {
             currentView = 'detail';
-            const data = details[id];
+            const data = detailsData[id];
             if (!data) return;
 
             document.getElementById('grid').classList.add('hidden');
             document.getElementById('detail').classList.remove('hidden');
 
-            // Показываем/скрываем блоки
-            const strategyContent = document.getElementById('strategyContent');
+            // Получаем элементы
+            const detailContent = document.getElementById('detailContent');
             const subscribeContent = document.getElementById('subscribeContent');
 
-            if (id === 'strategy') {
-                strategyContent.classList.remove('hidden');
-                subscribeContent.classList.add('hidden');
-            } else if (id === 'subscribe') {
-                strategyContent.classList.add('hidden');
+            // Показываем/скрываем блоки
+            if (id === 'subscribe') {
+                detailContent.classList.add('hidden');
                 subscribeContent.classList.remove('hidden');
                 
-                // Заполняем инструкцию по подписке
                 document.getElementById('subscribeDesc').textContent = data.desc || '';
                 const stepsContainer = document.getElementById('subscribeSteps');
                 stepsContainer.innerHTML = '';
                 if (data.steps) {
-                    data.steps.forEach((step, index) => {
+                    data.steps.forEach(function(step, index) {
                         const div = document.createElement('div');
                         div.className = 'step';
                         div.innerHTML = `
@@ -719,20 +713,20 @@
                     tg.openTelegramLink('https://t.me/filview');
                 };
             } else {
-                strategyContent.classList.remove('hidden');
+                detailContent.classList.remove('hidden');
                 subscribeContent.classList.add('hidden');
+                
+                // Заполняем общие поля
+                document.getElementById('detailDesc').textContent = data.desc || '';
+                document.getElementById('detailStats').textContent = data.stats || '';
+                document.getElementById('detailParams').textContent = data.params || '';
             }
 
-            // Заполняем общие поля
+            // Заполняем заголовки
             document.getElementById('detailIcon').textContent = data.icon || '📊';
             document.getElementById('detailName').textContent = data.name;
             document.getElementById('detailSubtitle').textContent = data.subtitle || '';
-            document.getElementById('detailPrice').innerHTML = data.price ? `<div class="price">${data.price}</div>` : '';
-            
-            // Заполняем поля стратегии
-            document.getElementById('detailDesc').textContent = data.desc || '';
-            document.getElementById('detailStats').textContent = data.stats || '';
-            document.getElementById('detailParams').textContent = data.params || '';
+            document.getElementById('detailPrice').innerHTML = data.price ? '<div class="price">' + data.price + '</div>' : '';
 
             try { tg.HapticFeedback.impactOccurred('medium'); } catch(e) {}
         }
@@ -767,7 +761,7 @@
         // ================================================================
         renderMainMenu();
 
-        // Убираем кнопку снизу
+        // Скрываем кнопку снизу
         try {
             tg.MainButton.hide();
         } catch(e) {}
