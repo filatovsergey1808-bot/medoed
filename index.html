@@ -31,32 +31,28 @@
             margin: 0 auto;
         }
 
-        /* HEADER — компактный, без лишнего */
+        /* HEADER — компактный, без эмодзи */
         .header {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 14px;
-            padding: 12px 16px 10px 16px;
+            padding: 14px 16px 12px 16px;
             margin-bottom: 16px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.04);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
-        .header .logo {
-            font-size: 24px;
-            margin-bottom: 0px;
-        }
         .header h1 {
-            font-size: 17px;
+            font-size: 22px;
             font-weight: 400;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             color: #e8e6e3;
             text-transform: uppercase;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
         }
 
-        /* СТАТИСТИКА — белые цифры */
+        /* СТАТИСТИКА */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -88,7 +84,7 @@
             font-weight: 200;
         }
 
-        /* AUM + ПОДПИСЧИКИ — белые цифры */
+        /* AUM + ПОДПИСЧИКИ */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -120,7 +116,7 @@
             font-weight: 200;
         }
 
-        /* КНОПКИ — шире на 50% */
+        /* КНОПКИ */
         .grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -363,9 +359,8 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER — компактный, без полоски и без подписи -->
+        <!-- HEADER — без эмодзи, крупный шрифт -->
         <div class="header">
-            <div class="logo">🦡</div>
             <h1>Фьючерсы Медоеда</h1>
         </div>
 
