@@ -31,17 +31,21 @@
             margin: 0 auto;
         }
 
-        /* HEADER — шире, больше отступов */
+        /* HEADER — в два раза выше, такой же цвет как у карточек */
         .header {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 14px;
-            padding: 20px 20px 18px 20px;
+            padding: 40px 20px 38px 20px;
             margin-bottom: 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .header h1 {
             font-size: 22px;
@@ -51,6 +55,14 @@
             text-transform: uppercase;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
             white-space: nowrap;
+        }
+        .header .since {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 2px;
+            margin-top: 6px;
+            font-weight: 200;
+            text-transform: uppercase;
         }
 
         /* СТАТИСТИКА */
@@ -85,7 +97,7 @@
             font-weight: 200;
         }
 
-        /* AUM + ПОДПИСЧИКИ — рубли */
+        /* AUM + ПОДПИСЧИКИ */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -360,15 +372,16 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER — шире, больше отступов -->
+        <!-- HEADER — в два раза выше -->
         <div class="header">
             <h1>Фьючерсы Медоеда</h1>
+            <div class="since">Стратегия с 2024</div>
         </div>
 
-        <!-- AUM + ПОДПИСЧИКИ — В РУБЛЯХ -->
+        <!-- AUM + ПОДПИСЧИКИ -->
         <div class="aum-grid">
             <div class="aum-card">
-                <div class="num green">₽ 112 500 000</div>
+                <div class="num green">2 300 000 ₽</div>
                 <div class="label">В управлении</div>
             </div>
             <div class="aum-card">
@@ -377,7 +390,7 @@
             </div>
         </div>
 
-        <!-- СТАТИСТИКА -->
+        <!-- СТАТИСТИКА — российские эмитенты -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="num green">+42.7%</div>
@@ -452,7 +465,7 @@
         }
 
         // ================================================================
-        // 2. ДАННЫЕ
+        // 2. ДАННЫЕ — ТОЛЬКО РОССИЙСКИЕ ЭМИТЕНТЫ
         // ================================================================
         const categories = [
             { id: 'strategy', name: 'О стратегии' },
@@ -467,7 +480,7 @@
                 name: 'О стратегии',
                 subtitle: 'Фьючерсы Медоеда',
                 price: 'Версия 2.0',
-                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа. Торгуем криптофьючерсы с плечом x2-x3. Таймфрейм 4H.',
+                desc: 'Стратегия автоследования на основе трендовых индикаторов и объёмного анализа. Торгуем фьючерсы на российские активы. Таймфрейм 4H.',
                 stats: 'Винрейт: 68%\nДоходность: +42.7%\nСделок: 156\nФактор прибыли: 2.3',
                 params: 'Основа: трендовый анализ\nИндикаторы: EMA, RSI, Volume\nТаймфрейм: 4H\nЗапуск: 2024\nПлечо: x2-x3\nРиск: 5% на сделку'
             },
@@ -493,18 +506,18 @@
                 icon: '💼',
                 name: 'Текущие позиции',
                 subtitle: '3 открытые позиции',
-                price: 'Общая маржа: ₽ 112 500',
+                price: 'Общая маржа: 112 500 ₽',
                 desc: 'Текущие открытые позиции по стратегии Медоеда.',
-                stats: 'BTC: BUY @ 62 100 (x3)\nETH: Ожидание @ 3 050\nSOL: SELL @ 168.00 (x2)',
-                params: 'Общая маржа: ₽ 112 500\nПлечо: x2-x3\nСледующий сигнал: 4H\nТекущий P&L: +2.3%'
+                stats: 'Сбербанк: BUY @ 280.50 (x3)\nГазпром: Ожидание @ 145.00\nЛУКОЙЛ: SELL @ 7 100 (x2)',
+                params: 'Общая маржа: 112 500 ₽\nПлечо: x2-x3\nСледующий сигнал: 4H\nТекущий P&L: +2.3%'
             },
             'closed': {
                 icon: '✅',
                 name: 'Закрытые позиции',
                 subtitle: '156 сделок',
-                price: 'Общий профит: +₽ 384 300',
+                price: 'Общий профит: +384 300 ₽',
                 desc: 'Все закрытые сделки стратегии Медоеда.',
-                stats: 'BTC +3.2%\nETH +1.8%\nSOL -2.1%\nBTC +4.5%\nETH +2.3%\nSOL +1.9%\nBTC -1.5%\nETH +3.1%\nSOL +2.7%\nBTC +5.2%',
+                stats: 'Сбербанк +3.2%\nГазпром +1.8%\nЛУКОЙЛ -2.1%\nСбербанк +4.5%\nГазпром +2.3%\nЛУКОЙЛ +1.9%\nСбербанк -1.5%\nГазпром +3.1%\nЛУКОЙЛ +2.7%\nСбербанк +5.2%',
                 params: 'Винрейт: 68%\nОбщая доходность: +42.7%\nВсего: 156 сделок\nСредний профит: +4.2%'
             },
             'subscribe': {
