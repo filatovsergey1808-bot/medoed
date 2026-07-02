@@ -31,7 +31,7 @@
             margin: 0 auto;
         }
 
-        /* HEADER — компактный, без эмодзи */
+        /* HEADER */
         .header {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
@@ -50,6 +50,7 @@
             color: #e8e6e3;
             text-transform: uppercase;
             text-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
+            white-space: nowrap; /* ТОЛЬКО ЗДЕСЬ — текст в одну строку */
         }
 
         /* СТАТИСТИКА */
@@ -359,7 +360,7 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER — без эмодзи, крупный шрифт -->
+        <!-- HEADER -->
         <div class="header">
             <h1>Фьючерсы Медоеда</h1>
         </div>
