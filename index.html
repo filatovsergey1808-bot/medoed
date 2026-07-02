@@ -6,7 +6,6 @@
     <title>Фьючерсы Медоеда</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Импорт узкого шрифта */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600&display=swap');
 
         * {
@@ -17,8 +16,8 @@
         body {
             font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            padding: 20px 16px;
-            color: #f0ece6;
+            padding: 16px 16px;
+            color: #e8e6e3;
             background: #0d0d0d;
             background-image: radial-gradient(ellipse at 30% 20%, #1a1a1a 0%, #0d0d0d 80%);
             background-attachment: fixed;
@@ -28,75 +27,41 @@
         #app {
             position: relative;
             z-index: 1;
-            max-width: 420px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
-        /* HEADER */
+        /* HEADER — компактный, без лишнего */
         .header {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 18px 20px 14px 20px;
-            margin-bottom: 18px;
+            border-radius: 14px;
+            padding: 12px 16px 10px 16px;
+            margin-bottom: 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         .header .logo {
-            font-size: 28px;
-            margin-bottom: 2px;
+            font-size: 24px;
+            margin-bottom: 0px;
         }
         .header h1 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 400;
             letter-spacing: 3px;
-            color: #f5d742;
+            color: #e8e6e3;
             text-transform: uppercase;
-            text-shadow: 0 0 30px rgba(245, 215, 66, 0.12);
-        }
-        .header .sub {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.2);
-            letter-spacing: 3.5px;
-            margin-top: 3px;
-            font-weight: 200;
-            text-transform: uppercase;
-        }
-        .header .accent-line {
-            width: 40px;
-            height: 1.5px;
-            background: #f5d742;
-            margin: 8px auto 0 auto;
-            border-radius: 2px;
-            box-shadow: 0 0 20px rgba(245, 215, 66, 0.15);
-        }
-        .header .channel-link {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 4px 14px;
-            background: rgba(245, 215, 66, 0.06);
-            border: 1px solid rgba(245, 215, 66, 0.1);
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 300;
-            color: #f5d742;
-            text-decoration: none;
-            transition: all 0.3s;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-        .header .channel-link:active {
-            background: rgba(245, 215, 66, 0.15);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.04);
         }
 
-        /* СТАТИСТИКА */
+        /* СТАТИСТИКА — белые цифры */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .stat-card {
             background: rgba(255, 255, 255, 0.03);
@@ -109,9 +74,11 @@
         .stat-card .num {
             font-size: 18px;
             font-weight: 400;
-            color: #f5d742;
+            color: #e8e6e3;
             letter-spacing: 0.5px;
         }
+        .stat-card .num.green { color: #8bc4a0; }
+        .stat-card .num.red { color: #c48a8a; }
         .stat-card .label {
             font-size: 8px;
             color: rgba(255, 255, 255, 0.2);
@@ -120,15 +87,13 @@
             margin-top: 3px;
             font-weight: 200;
         }
-        .stat-card .num.green { color: #6fcf97; }
-        .stat-card .num.red { color: #eb5757; }
 
-        /* AUM + ПОДПИСЧИКИ */
+        /* AUM + ПОДПИСЧИКИ — белые цифры */
         .aum-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .aum-card {
             background: rgba(255, 255, 255, 0.03);
@@ -142,10 +107,10 @@
         .aum-card .num {
             font-size: 20px;
             font-weight: 400;
-            color: #f5d742;
+            color: #e8e6e3;
             letter-spacing: 0.5px;
         }
-        .aum-card .num.green { color: #6fcf97; }
+        .aum-card .num.green { color: #8bc4a0; }
         .aum-card .label {
             font-size: 8px;
             color: rgba(255, 255, 255, 0.2);
@@ -155,11 +120,11 @@
             font-weight: 200;
         }
 
-        /* КНОПКИ - УЗКИЕ, БЕЗ ЭМОДЗИ */
+        /* КНОПКИ — шире на 50% */
         .grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
         .grid.submenu {
@@ -170,13 +135,13 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid rgba(255, 255, 255, 0.04);
             width: 100%;
-            padding: 14px 20px;
+            padding: 18px 24px;
         }
         .card:active {
             transform: scale(0.97);
@@ -186,9 +151,9 @@
         }
         .card .name {
             font-weight: 300;
-            font-size: 13px;
+            font-size: 14px;
             letter-spacing: 2.5px;
-            color: #f0ece6;
+            color: #e8e6e3;
             text-transform: uppercase;
         }
         .card .badge {
@@ -198,8 +163,8 @@
             border-radius: 8px;
             margin-top: 4px;
             letter-spacing: 1px;
-            background: rgba(245, 215, 66, 0.08);
-            color: rgba(245, 215, 66, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
             font-weight: 200;
         }
 
@@ -259,7 +224,7 @@
         .info-block h3 {
             font-size: 16px;
             font-weight: 400;
-            color: #f0ece6;
+            color: #e8e6e3;
             margin-bottom: 2px;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -295,7 +260,7 @@
         .info-block .price {
             font-size: 20px;
             font-weight: 400;
-            color: #f5d742;
+            color: #e8e6e3;
             margin-top: 6px;
             letter-spacing: 0.5px;
         }
@@ -304,10 +269,10 @@
         .btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
-            font-size: 12px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 400;
             cursor: pointer;
             transition: all 0.2s;
@@ -318,21 +283,21 @@
             font-family: 'Montserrat', sans-serif;
         }
         .btn-success {
-            background: #f5d742;
-            color: #0d0d0d;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e8e6e3;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .btn-success:active {
-            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(0.97);
         }
         .btn-tg {
-            background: rgba(245, 215, 66, 0.08);
-            color: #f5d742;
-            border: 1px solid rgba(245, 215, 66, 0.15);
-            font-weight: 400;
+            background: rgba(255, 255, 255, 0.04);
+            color: #e8e6e3;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .btn-tg:active {
-            background: rgba(245, 215, 66, 0.15);
+            background: rgba(255, 255, 255, 0.08);
             transform: scale(0.97);
         }
         .hidden {
@@ -374,8 +339,8 @@
             width: 22px;
             height: 22px;
             border-radius: 50%;
-            background: rgba(245, 215, 66, 0.08);
-            color: rgba(245, 215, 66, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -391,7 +356,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* Убираем эмодзи из карточек */
         .card .icon {
             display: none;
         }
@@ -399,13 +363,10 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER -->
+        <!-- HEADER — компактный, без полоски и без подписи -->
         <div class="header">
             <div class="logo">🦡</div>
             <h1>Фьючерсы Медоеда</h1>
-            <div class="sub">Auto-Trading Strategy</div>
-            <div class="accent-line"></div>
-            <a href="https://t.me/filview" target="_blank" class="channel-link">@filview</a>
         </div>
 
         <!-- AUM + ПОДПИСЧИКИ -->
