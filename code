@@ -23,9 +23,10 @@
         #app {
             position: relative;
             z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        /* Header */
         .header {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
@@ -80,7 +81,6 @@
             background: rgba(245, 215, 66, 0.15);
         }
 
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -111,7 +111,6 @@
         .stat-card .num.green { color: #6fcf97; }
         .stat-card .num.red { color: #eb5757; }
 
-        /* Grid */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -122,7 +121,6 @@
             grid-template-columns: 1fr;
         }
 
-        /* Cards */
         .card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(8px);
@@ -169,7 +167,6 @@
         .card .badge.green { background: rgba(111, 207, 151, 0.12); color: #6fcf97; }
         .card .badge.red { background: rgba(235, 87, 87, 0.12); color: #eb5757; }
 
-        /* Back */
         .back-link {
             display: inline-block;
             padding: 6px 14px;
@@ -204,7 +201,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Detail */
         .info-block {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
@@ -305,7 +301,6 @@
         }
         .back-btn:active { opacity: 0.6; }
 
-        /* Signal Badge */
         .signal-badge {
             display: inline-block;
             padding: 2px 12px;
@@ -318,22 +313,6 @@
         .signal-badge.buy { background: rgba(111, 207, 151, 0.15); color: #6fcf97; }
         .signal-badge.sell { background: rgba(235, 87, 87, 0.15); color: #eb5757; }
         .signal-badge.wait { background: rgba(245, 215, 66, 0.12); color: #f5d742; }
-
-        /* Progress */
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            border-radius: 4px;
-            background: #f5d742;
-            transition: width 0.5s;
-        }
 
         .row {
             display: flex;
@@ -348,7 +327,6 @@
 <body>
 
     <div id="app">
-        <!-- Header -->
         <div class="header">
             <div class="logo">🦡</div>
             <h1>Фьючерсы Медоеда</h1>
@@ -357,7 +335,6 @@
             <a href="https://t.me/filview" target="_blank" class="channel-link">📢 @filview</a>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
                 <div class="num" id="statProfit">+42.7%</div>
@@ -373,12 +350,10 @@
             </div>
         </div>
 
-        <!-- Grid -->
         <div id="gridContainer">
             <div class="grid" id="grid"></div>
         </div>
 
-        <!-- Detail -->
         <div class="info-block hidden" id="detail">
             <button class="back-btn" id="backBtn">← Назад</button>
             <div class="icon-big" id="detailIcon">📊</div>
@@ -416,19 +391,39 @@
         // 1. ДАННЫЕ
         // ================================================================
 
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+        // Проверка Telegram WebApp
+        let tg;
+        try {
+            tg = window.Telegram.WebApp;
+            tg.expand();
+        } catch(e) {
+            console.log('Telegram WebApp not available');
+            tg = {
+                expand: function() {},
+                MainButton: {
+                    show: function() {},
+                    onClick: function() {},
+                    setText: function() {}
+                },
+                HapticFeedback: {
+                    impactOccurred: function() {}
+                },
+                openTelegramLink: function(url) {
+                    window.open(url, '_blank');
+                }
+            };
+        }
 
-        // Основные категории (инструменты)
+        // Основные категории
         const categories = [
             {
                 id: 'futures',
                 name: 'Фьючерсы',
                 icon: '📊',
                 items: [
-                    { id: 'btc', name: 'Bitcoin', symbol: 'BTC/USDT', badge: 'Buy' },
-                    { id: 'eth', name: 'Ethereum', symbol: 'ETH/USDT', badge: 'Wait' },
-                    { id: 'sol', name: 'Solana', symbol: 'SOL/USDT', badge: 'Sell' }
+                    { id: 'btc', name: 'Bitcoin', symbol: 'BTC/USDT', badge: 'BUY' },
+                    { id: 'eth', name: 'Ethereum', symbol: 'ETH/USDT', badge: 'WAIT' },
+                    { id: 'sol', name: 'Solana', symbol: 'SOL/USDT', badge: 'SELL' }
                 ]
             },
             {
@@ -680,15 +675,15 @@
                 <span class="category-title">${category.icon} ${category.name}</span>
             `;
             grid.appendChild(header);
-            header.querySelector('#submenuBackBtn').onclick = renderMainMenu;
+            document.getElementById('submenuBackBtn').onclick = renderMainMenu;
 
             category.items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                const isSignal = item.badge === 'Buy' || item.badge === 'Sell' || item.badge === 'Wait';
-                const badgeClass = item.badge === 'Buy' ? 'green' : (item.badge === 'Sell' ? 'red' : '');
+                const data = details[item.id];
+                const badgeClass = item.badge === 'BUY' ? 'green' : (item.badge === 'SELL' ? 'red' : '');
                 card.innerHTML = `
-                    <div class="icon">${details[item.id]?.icon || '📊'}</div>
+                    <div class="icon">${data ? data.icon : '📊'}</div>
                     <div class="info">
                         <div class="name">${item.name}</div>
                         <div class="badge ${badgeClass}">${item.badge}</div>
@@ -724,7 +719,9 @@
             document.getElementById('detailLevels').textContent = data.levels || '';
             document.getElementById('detailParams').textContent = data.params || '';
 
-            tg.HapticFeedback.impactOccurred('medium');
+            try {
+                tg.HapticFeedback.impactOccurred('medium');
+            } catch(e) {}
         }
 
         function goToMainMenu() {
@@ -738,7 +735,7 @@
         // 3. ОБРАБОТЧИКИ
         // ================================================================
 
-        document.getElementById('backBtn').onclick = () => {
+        document.getElementById('backBtn').onclick = function() {
             if (currentView === 'detail') {
                 document.getElementById('detail').classList.add('hidden');
                 document.getElementById('grid').classList.remove('hidden');
@@ -757,11 +754,15 @@
 
         renderMainMenu();
 
-        tg.MainButton.setText('Открыть канал');
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => {
-            tg.openTelegramLink('https://t.me/filview');
-        });
+        try {
+            tg.MainButton.setText('Открыть канал');
+            tg.MainButton.show();
+            tg.MainButton.onClick(function() {
+                tg.openTelegramLink('https://t.me/filview');
+            });
+        } catch(e) {
+            console.log('MainButton error:', e);
+        }
     </script>
 </body>
 </html>
